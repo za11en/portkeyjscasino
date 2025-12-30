@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portkey | Regulated Ontario iGaming Data</title>
+    <title>Portkey | Ontario iGaming</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        gold: { 400: '#C5A059', 500: '#B08D55', 600: '#8A6D3B' }, // Muted Luxury Gold
-                        void: '#0A0A0A',
-                        surface: '#141414',
-                        surfaceLight: '#1F1F1F',
+                        brand: {
+                            purple: '#6d28d9', // Deep Purple
+                            light: '#8b5cf6', // Light Purple
+                            yellow: '#fbbf24', // Warm Yellow
+                            neon: '#fde047',   // Bright Yellow (Buttons)
+                        },
+                        bg: '#581c87', // Darker Purple BG
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Montserrat', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'glow': '0 0 20px rgba(176, 141, 85, 0.15)',
+                        sans: ['Fredoka', 'sans-serif'], // Rounded Font
                     }
                 }
             }
@@ -32,164 +31,146 @@
     <style>
         [v-cloak] { display: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .text-gradient { background: linear-gradient(to right, #C5A059, #E6D2A9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-shimmer { background: linear-gradient(90deg, #B08D55 0%, #E6D2A9 50%, #B08D55 100%); background-size: 200%; animation: shimmer 3s infinite linear; color: #000; }
-        @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-        .logo-fallback { display: flex; align-items: center; justify-content: center; background: #222; color: #666; font-weight: bold; }
+        
+        /* SHIMMER EFFECT FOR BUTTONS */
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 100% { left: 100%; } }
+
+        /* LOGO FALLBACK CIRCLE */
+        .logo-fallback {
+            background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
+            color: #5b21b6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
     </style>
 </head>
-<body class="bg-void text-gray-200 font-sans antialiased selection:bg-gold-500 selection:text-black flex flex-col min-h-screen">
+<body class="bg-bg text-white font-sans pb-12 selection:bg-brand-neon selection:text-black">
 
-    <div id="app" v-cloak class="flex-grow">
+    <div id="app" v-cloak class="min-h-screen flex flex-col">
 
-        <div v-if="error" class="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-8 text-center">
-            <div class="border border-red-900/50 p-8 rounded-lg bg-surface max-w-lg">
-                <h1 class="text-3xl font-display font-bold text-white mb-2">Location Restricted</h1>
-                <p class="text-gray-400 text-sm">Portkey.ca is authorized for use only within Ontario, Canada.</p>
-                <div class="mt-4 inline-block px-3 py-1 bg-red-900/20 text-red-500 text-xs rounded border border-red-900/30">Detected: {{ errorRegion }}</div>
+        <div v-if="error" class="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-8">
+            <div class="bg-white text-black p-8 rounded-3xl text-center max-w-sm">
+                <div class="text-4xl mb-2">🚫</div>
+                <h2 class="text-2xl font-bold mb-2">Ontario Only</h2>
+                <p class="text-gray-500 text-sm">We detected you are in {{ errorRegion }}. This site is for Ontario residents.</p>
             </div>
         </div>
 
-        <div v-if="!ageVerified && !error" class="fixed inset-0 z-50 bg-black/98 flex items-center justify-center p-4">
-            <div class="bg-surface border border-white/10 rounded-xl p-8 max-w-md w-full text-center shadow-2xl">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/19%2B_Age_Restriction_Logo.svg/1024px-19%2B_Age_Restriction_Logo.svg.png" class="h-12 mx-auto mb-6 opacity-80 filter invert">
-                <h1 class="text-2xl font-display font-bold text-white mb-3">Regulatory Age Check</h1>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed">You must be 19 years of age or older to access information regarding Ontario's regulated iGaming market.</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <button @click="denyAge" class="py-3 rounded-lg border border-white/10 text-gray-400 hover:text-white transition text-sm">Exit Site</button>
-                    <button @click="confirmAge" class="py-3 rounded-lg btn-shimmer font-bold text-sm shadow-glow">I am 19+</button>
+        <div v-if="!ageVerified && !error" class="fixed inset-0 z-50 bg-brand-purple/95 backdrop-blur flex items-center justify-center p-6">
+            <div class="bg-white text-brand-purple p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl border-4 border-brand-yellow">
+                <h1 class="text-4xl font-black mb-2">19+ Only</h1>
+                <p class="text-gray-600 font-bold mb-6">Are you legally allowed to play in Ontario?</p>
+                <div class="space-y-3">
+                    <button @click="confirmAge" class="w-full py-4 rounded-xl bg-brand-yellow text-black font-black text-xl shadow-lg hover:scale-105 transition transform btn-shine">
+                        YES, I AM 19+
+                    </button>
+                    <button @click="denyAge" class="w-full py-3 rounded-xl bg-gray-100 text-gray-400 font-bold hover:bg-gray-200">
+                        NO, EXIT
+                    </button>
                 </div>
             </div>
         </div>
 
-        <header class="px-6 py-4 flex justify-between items-center bg-void/90 backdrop-blur border-b border-white/5 sticky top-0 z-40">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-gold-500 flex items-center justify-center text-black font-bold font-display">P</div>
-                <div>
-                    <span class="block text-lg font-display font-bold text-white leading-none">PORTKEY</span>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Authorized Data</span>
-                </div>
+        <header class="px-6 py-4 flex justify-between items-center bg-brand-purple shadow-lg sticky top-0 z-40">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-brand-purple font-black text-xl shadow">P</div>
+                <span class="text-2xl font-black tracking-tight text-white">Portkey</span>
             </div>
-            <div class="hidden sm:flex items-center gap-2">
-                <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-xs text-green-500 font-mono">AGCO LICENSED DATA</span>
-            </div>
+            <a href="#" class="bg-brand-neon text-black px-4 py-2 rounded-full font-bold text-sm hover:scale-105 transition">
+                Top Picks
+            </a>
         </header>
 
-        <div class="pt-12 pb-8 px-4 text-center border-b border-white/5 bg-gradient-to-b from-surface to-void">
-            <h1 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">
-                Ontario's Regulated <br/> <span class="text-gradient">iGaming Directory</span>
+        <div class="px-4 py-8 text-center bg-gradient-to-b from-brand-purple to-bg">
+            <h1 class="text-3xl md:text-5xl font-black mb-4 leading-tight">
+                Play Safe.<br/><span class="text-brand-yellow">Win Big.</span>
             </h1>
-            <p class="text-gray-400 max-w-xl mx-auto text-sm mb-8">
-                Live performance data for the top 40 licensed operators. <br class="hidden sm:block"> Verified bonuses, payout speeds, and RTP compliance stats.
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
-                <button v-for="type in ['all', 'match', 'spins', 'no_wager', 'lossback']" 
-                        @click="filter = type"
-                        :class="filter === type ? 'bg-gold-500 text-black border-gold-500' : 'bg-surfaceLight border-white/5 text-gray-400 hover:text-white'"
-                        class="px-5 py-2 rounded-full border text-xs font-bold uppercase tracking-wide transition-all">
+            
+            <div class="flex flex-wrap justify-center gap-2 mt-6">
+                <button v-for="type in ['all', 'no_wager', 'match', 'spins']" 
+                    @click="filter = type"
+                    :class="filter === type ? 'bg-white text-brand-purple' : 'bg-brand-light/20 text-white hover:bg-brand-light/40'"
+                    class="px-5 py-2 rounded-full font-bold uppercase text-xs transition-all border-2 border-transparent">
                     {{ type.replace('_', ' ') }}
                 </button>
             </div>
         </div>
 
-        <main class="max-w-4xl mx-auto px-4 py-12 min-h-[60vh]">
+        <main class="px-4 pb-12 max-w-6xl mx-auto">
             
-            <div v-if="loading" class="flex flex-col items-center justify-center py-20">
-                <div class="w-10 h-10 border-2 border-gold-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-xs text-gold-500 font-mono tracking-widest">AUTHENTICATING...</p>
+            <div v-if="loading" class="text-center py-20 text-brand-neon font-bold animate-pulse">
+                LOADING OFFERS...
             </div>
 
-            <div class="grid grid-cols-1 gap-4">
-                <div v-for="(casino, index) in filteredCasinos" :key="casino.id" 
-                     class="group relative bg-surface border border-white/5 rounded-xl p-5 hover:border-gold-500/30 transition-all duration-300 flex flex-col md:flex-row items-center gap-6">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <div v-for="casino in filteredCasinos" :key="casino.id" 
+                     class="bg-white text-gray-800 rounded-3xl p-5 shadow-xl relative overflow-hidden hover:-translate-y-1 transition duration-300 group">
                     
-                    <div v-if="casino.hero_badge" class="absolute top-0 left-0 bg-white/5 border-r border-b border-white/5 text-[9px] font-bold px-3 py-1 rounded-br-lg uppercase text-gray-400">
+                    <div v-if="casino.hero_badge" class="absolute top-0 right-0 bg-brand-yellow text-black text-xs font-black px-4 py-1 rounded-bl-xl z-10">
                         {{ casino.hero_badge }}
                     </div>
 
-                    <div class="flex-shrink-0 relative">
-                        <div class="absolute -top-1 -right-1 bg-green-500 text-black rounded-full p-0.5 z-10 border border-void" title="AGCO Licensed">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
+                    <div class="flex flex-col items-center text-center">
                         
-                        <div class="w-20 h-20 rounded-lg bg-white p-2 flex items-center justify-center overflow-hidden">
-                            <img :src="'https://logo.clearbit.com/' + casino.domain" 
-                                 @error="e => e.target.style.display = 'none'"
-                                 class="max-w-full max-h-full object-contain"
-                                 alt="Logo">
-                            <div class="hidden w-full h-full bg-gray-200 text-gray-400 font-bold flex items-center justify-center logo-fallback">
-                                {{ casino.name.substring(0,2).toUpperCase() }}
+                        <div class="w-20 h-20 mb-4 relative rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm">
+                            <img :src="`https://logo.clearbit.com/${casino.domain}`" 
+                                 @error="handleImageError"
+                                 class="w-full h-full object-contain p-2"
+                                 :alt="casino.name">
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="flex-grow text-center md:text-left w-full">
-                        <h2 class="text-xl font-display font-bold text-white mb-1 flex items-center justify-center md:justify-start gap-2">
-                            {{ casino.name }}
-                            <span class="text-[10px] text-gray-600 border border-gray-800 px-1 rounded font-mono font-normal">ON-REG</span>
-                        </h2>
+                        <h2 class="text-xl font-black text-brand-purple mb-1">{{ casino.name }}</h2>
                         
-                        <div class="bg-surfaceLight border border-white/5 rounded p-2 mb-2 inline-block w-full md:w-auto">
-                             <p class="text-[10px] text-gold-500 uppercase font-bold mb-0.5">Welcome Offer</p>
-                             <p class="text-sm font-bold text-white">{{ casino.sign_up_bonus }}</p>
+                        <div class="bg-purple-50 rounded-xl p-3 w-full mb-4 border border-purple-100">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Welcome Bonus</p>
+                            <p class="text-md font-black text-brand-purple leading-tight">{{ casino.sign_up_bonus }}</p>
                         </div>
-                    </div>
 
-                    <div class="flex gap-4 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-6 min-w-[140px] justify-center">
-                        <div class="text-center">
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">Payout</p>
-                            <p class="text-lg font-bold text-white font-mono">{{ casino.metrics.speed }}h</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-[9px] text-gray-500 uppercase font-bold">RTP</p>
-                            <p class="text-lg font-bold text-gold-500 font-mono">{{ casino.metrics.rtp }}%</p>
-                        </div>
-                    </div>
-
-                    <div class="w-full md:w-auto flex-shrink-0">
-                        <a :href="'/go/' + casino.id" target="_blank" class="block w-full px-6 py-3 rounded-lg bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-gold-400 transition text-center">
-                            View Site
+                        <a :href="'/go/' + casino.id" target="_blank" class="w-full py-3 rounded-xl bg-brand-neon text-black font-black text-lg uppercase shadow-md hover:bg-yellow-300 transition btn-shine">
+                            Play Now
                         </a>
-                        <p class="text-[8px] text-gray-600 mt-2 text-center">T&Cs Apply | 19+</p>
-                    </div>
+                        
+                        <div class="mt-3 flex items-center justify-center gap-2 opacity-60">
+                            <span class="text-[10px] font-bold bg-gray-200 px-2 py-0.5 rounded">RTP {{ casino.metrics.rtp }}%</span>
+                            <span class="text-[10px] font-bold bg-gray-200 px-2 py-0.5 rounded">{{ casino.metrics.speed === 0 ? 'Instant' : casino.metrics.speed + 'H' }} Payout</span>
+                        </div>
 
+                    </div>
                 </div>
+
             </div>
+
         </main>
 
-        <footer class="border-t border-white/10 bg-surface py-12 mt-auto">
-            <div class="max-w-4xl mx-auto px-6">
-                
-                <div class="flex flex-wrap justify-center items-center gap-8 mb-8 opacity-60 hover:opacity-100 transition duration-500">
-                    <a href="https://igamingontario.ca" target="_blank" class="group">
-                        <div class="h-10 flex items-center gap-2">
-                            <img src="https://www.igamingontario.ca/themes/custom/igo_theme/images/igo-logo.svg" class="h-8 filter invert" alt="iGaming Ontario">
-                        </div>
-                    </a>
-                    
-                    <a href="https://agco.ca" target="_blank">
-                         <div class="h-10 flex items-center gap-2">
-                            <img src="https://www.agco.ca/themes/custom/agco_theme/logo.svg" class="h-8 filter invert" alt="AGCO">
-                        </div>
-                    </a>
-
-                    <a href="https://connexontario.ca" target="_blank" class="flex items-center gap-2">
-                         <span class="text-sm font-bold text-white border-l border-gray-600 pl-4">ConnexOntario</span>
-                         <span class="text-xs text-gray-400 block">1-866-531-2600</span>
-                    </a>
-                </div>
-
-                <div class="text-center border-t border-white/5 pt-8">
-                    <p class="text-[10px] text-gray-500 leading-relaxed max-w-2xl mx-auto">
-                        **LEGAL DISCLAIMER:** Portkey.ca is an independent affiliate data aggregator. We are not a gambling operator. All casinos listed are licensed by the Alcohol and Gaming Commission of Ontario (AGCO) and operate under agreement with iGaming Ontario. 
-                        Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, contact ConnexOntario at 1-866-531-2600 or visit <a href="https://connexontario.ca" class="text-gold-500 underline">connexontario.ca</a>. 
-                        Must be 19+ and physically located in Ontario to play.
-                    </p>
-                    <p class="text-[10px] text-gray-600 mt-4">&copy; 2025 Portkey Analytics. All rights reserved.</p>
-                </div>
+        <footer class="mt-auto bg-brand-purple/50 py-8 text-center px-6 border-t border-white/10">
+            <div class="flex justify-center gap-6 mb-6 opacity-70 grayscale hover:grayscale-0 transition">
+                <div class="border border-white/30 rounded px-2 py-1 text-xs font-bold">19+</div>
+                <div class="border border-white/30 rounded px-2 py-1 text-xs font-bold">CONNEX ONTARIO</div>
+                <div class="border border-white/30 rounded px-2 py-1 text-xs font-bold">AGCO</div>
+                <div class="border border-white/30 rounded px-2 py-1 text-xs font-bold">iGO</div>
             </div>
+            <p class="text-[10px] text-purple-200 max-w-2xl mx-auto">
+                Portkey.ca is an authorized affiliate. Gambling can be addictive, please play responsibly. <br/>
+                Call 1-866-531-2600 for help.
+            </p>
         </footer>
 
     </div>
@@ -238,7 +219,21 @@
             },
             methods: {
                 confirmAge() { this.ageVerified = true; localStorage.setItem('portkey_age_verified', 'true'); },
-                denyAge() { window.location.href = "https://www.google.ca"; }
+                denyAge() { window.location.href = "https://google.ca"; },
+                
+                // SMART LOGO FALLBACK
+                handleImageError(e) {
+                    // Hide the broken image
+                    e.target.style.display = 'none';
+                    // Create the fallback element (The circle with Initials)
+                    const parent = e.target.parentElement;
+                    const fallback = document.createElement('div');
+                    fallback.className = 'w-full h-full logo-fallback absolute inset-0 rounded-2xl';
+                    // Get initials from alt text
+                    const name = e.target.alt || '??';
+                    fallback.innerText = name.substring(0, 2).toUpperCase();
+                    parent.appendChild(fallback);
+                }
             }
         }).mount('#app');
     </script>
