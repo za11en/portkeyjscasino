@@ -1,26 +1,21 @@
-
 const { createApp } = Vue;
 
 createApp({
     data() { 
         return { 
             casinos: [], 
-            slots: [], 
+            slotsData: {}, // Changed to object to hold categories
             payments: [], 
-            dailyDrops: [], 
+            weeklySchedule: [],
+            skillArticles: [],
+            currentDayIndex: 0, // 0 = Today, 1 = Tomorrow, etc.
             filter: 'all', 
-            ageVerified: false, 
             loading: true, 
             error: false, 
-            errorRegion: '',
             visibleCount: 9 
         }
     },
     async mounted() {
-        if(localStorage.getItem('portkey_age_verified') === 'true') {
-            this.ageVerified = true;
-        }
-        
         try {
             const urlParams = new URLSearchParams(window.location.search);
             const apiUrl = urlParams.get('dev') ? `/api/data?dev=true` : `/api/data`;
@@ -28,52 +23,54 @@ createApp({
             const res = await fetch(apiUrl);
             
             if (res.status === 403) { 
-                const data = await res.json(); 
                 this.error = true; 
-                this.errorRegion = data.region; 
             } else { 
                 const data = await res.json(); 
                 this.casinos = data.casinos; 
-                this.slots = data.slots; 
+                this.slotsData = data.slots; // Now an object {trending:[], high_rtp:[], etc}
                 this.payments = data.payments;
-                this.dailyDrops = data.daily_drops;
+                this.weeklySchedule = data.weekly;
+                this.skillArticles = data.articles;
             }
         } catch (e) { 
-            console.error("Failed to fetch data:", e); 
+            console.error("Fetch Error:", e); 
         } finally { 
             this.loading = false; 
         }
     },
     computed: { 
         filteredCasinos() { 
-            return this.filter === 'all' 
-                ? this.casinos 
-                : this.casinos.filter(c => c.bonus_type === this.filter); 
+            return this.filter === 'all' ? this.casinos : this.casinos.filter(c => c.bonus_type === this.filter); 
         },
         visibleCasinos() { 
             return this.filteredCasinos.slice(0, this.visibleCount); 
         },
-        dailyRewardCasinos() { 
-            return this.casinos.filter(c => c.daily_reward); 
-        },
-        referralCasinos() { 
-            return this.casinos.filter(c => c.referral_bonus); 
+        // Returns the object for the currently selected Day
+        currentDayData() {
+            return this.weeklySchedule[this.currentDayIndex] || { day: 'Loading', rewards: [] };
         },
         todayName() { 
             return new Date().toLocaleDateString('en-US', { weekday: 'long' }); 
         }
     },
     methods: {
-        confirmAge() { 
-            this.ageVerified = true; 
-            localStorage.setItem('portkey_age_verified', 'true'); 
+        nextDay() {
+            if (this.currentDayIndex < this.weeklySchedule.length - 1) {
+                this.currentDayIndex++;
+            } else {
+                this.currentDayIndex = 0; // Loop back to start
+            }
         },
-        denyAge() { 
-            window.location.href = "https://google.ca"; 
+        prevDay() {
+            if (this.currentDayIndex > 0) {
+                this.currentDayIndex--;
+            } else {
+                this.currentDayIndex = this.weeklySchedule.length - 1; // Loop to end
+            }
         },
         handleImageError(e) { 
             e.target.style.display='none'; 
-            e.target.parentElement.innerHTML = `<div class='text-white font-bold text-xs'>${e.target.alt}</div>`; 
+            e.target.parentElement.innerHTML = `<div class='text-white font-bold text-[8px] p-1 text-center'>${e.target.alt}</div>`; 
         }
     }
 }).mount('#app');
