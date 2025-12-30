@@ -6,23 +6,38 @@
     <title>Portkey | Ontario iGaming</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            purple: '#6d28d9',
-                            light: '#8b5cf6',
-                            yellow: '#fbbf24',
-                            neon: '#fde047',
+                        neon: {
+                            pink: '#F70776',
+                            blue: '#00F2FF',
+                            purple: '#9D00FF',
+                            gold: '#FFD700'
                         },
-                        bg: '#581c87',
+                        void: '#0a0118', // Deepest Purple/Black
                     },
                     fontFamily: {
-                        sans: ['Fredoka', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
                     }
                 }
             }
@@ -32,138 +47,173 @@
         [v-cloak] { display: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        .btn-shine { position: relative; overflow: hidden; }
-        .btn-shine::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 3s infinite; }
-        @keyframes shine { 100% { left: 100%; } }
+        /* DYNAMIC BACKGROUND */
+        .dynamic-bg {
+            background: linear-gradient(-45deg, #0a0118, #1e0030, #2e0249, #0f0c29);
+            background-size: 400% 400%;
+            animation: gradient-x 15s ease infinite;
+        }
 
-        .logo-fallback { background: linear-gradient(135deg, #ddd6fe, #c4b5fd); color: #5b21b6; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.5rem; }
+        /* GLASS CARD EFFECT */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card:hover {
+            border: 1px solid rgba(247, 7, 118, 0.5); /* Neon Pink Border on Hover */
+            box-shadow: 0 0 20px rgba(247, 7, 118, 0.3);
+        }
+
+        /* NEON TEXT GRADIENT */
+        .text-neon {
+            background: linear-gradient(to right, #F70776, #9D00FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* BUTTON SHINE */
+        .btn-neon {
+            background: linear-gradient(90deg, #F70776 0%, #9D00FF 100%);
+            position: relative;
+            overflow: hidden;
+        }
     </style>
 </head>
-<body class="bg-bg text-white font-sans pb-12 selection:bg-brand-neon selection:text-black">
+<body class="dynamic-bg text-white font-sans min-h-screen flex flex-col selection:bg-neon-pink selection:text-white">
 
-    <div id="app" v-cloak class="min-h-screen flex flex-col">
+    <div id="app" v-cloak class="flex flex-col flex-grow">
 
-        <header class="px-6 py-4 flex justify-between items-center bg-brand-purple shadow-lg sticky top-0 z-40 border-b border-white/10">
+        <div v-if="error" class="fixed inset-0 z-50 bg-void/98 flex items-center justify-center p-8">
+            <div class="glass-card p-8 rounded-3xl text-center max-w-sm border-red-500/50">
+                <h2 class="text-2xl font-bold mb-2 text-red-500">Restricted Region</h2>
+                <p class="text-gray-400 text-sm">Detected: {{ errorRegion }}</p>
+            </div>
+        </div>
+
+        <div v-if="!ageVerified && !error" class="fixed inset-0 z-50 bg-void/95 backdrop-blur-xl flex items-center justify-center p-6">
+            <div class="glass-card p-8 rounded-[2rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(157,0,255,0.3)]">
+                <div class="flex justify-center mb-6">
+                    <img src="/19.jpeg" alt="19+" class="h-14 rounded-lg shadow-lg">
+                </div>
+                <h1 class="text-3xl font-display font-black mb-2 text-white">19+ CHECK</h1>
+                <p class="text-gray-400 text-sm mb-8">Strictly for authorized players in Ontario.</p>
+                <div class="space-y-3">
+                    <button @click="confirmAge" class="w-full py-4 rounded-xl btn-neon text-white font-bold text-lg shadow-lg hover:scale-105 transition">
+                        ENTER SITE
+                    </button>
+                    <button @click="denyAge" class="w-full py-3 rounded-xl border border-white/10 text-gray-500 hover:text-white hover:border-white/30 transition">
+                        EXIT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <header class="px-6 py-4 flex justify-between items-center glass-card border-none border-b border-white/5 sticky top-0 z-40 bg-void/50">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-brand-purple font-black text-xl shadow">P</div>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center font-black text-white shadow-lg text-xl">P</div>
                 <div>
-                    <span class="block text-2xl font-black tracking-tight text-white leading-none">Portkey</span>
-                    <span class="text-[10px] text-purple-200 uppercase tracking-widest font-bold">Ontario Regulated</span>
+                    <span class="block text-xl font-display font-black tracking-tight leading-none text-white">Portkey</span>
                 </div>
             </div>
             
-            <div class="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/10">
-                <img src="/canada.png" alt="Canada Flag" class="h-4 w-auto shadow-sm">
-                <span class="text-xs font-bold text-white">ON</span>
+            <div class="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-sm">
+                <img src="/canada.png" alt="Canada" class="h-4 w-auto">
+                <span class="text-[10px] font-bold tracking-widest text-neon-blue">ONTARIO</span>
             </div>
         </header>
 
-        <div v-if="error" class="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-8">
-            <div class="bg-white text-black p-8 rounded-3xl text-center max-w-sm">
-                <div class="text-4xl mb-2">🚫</div>
-                <h2 class="text-2xl font-bold mb-2">Ontario Only</h2>
-                <p class="text-gray-500 text-sm">We detected you are in {{ errorRegion }}. This site is for Ontario residents.</p>
-            </div>
-        </div>
+        <div class="px-4 py-10 text-center relative overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-neon-purple/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div v-if="!ageVerified && !error" class="fixed inset-0 z-50 bg-brand-purple/95 backdrop-blur flex items-center justify-center p-6">
-            <div class="bg-white text-brand-purple p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl border-4 border-brand-yellow">
-                <div class="flex justify-center mb-4">
-                    <img src="/19.jpeg" alt="19+" class="h-12 w-auto">
-                </div>
-                <h1 class="text-3xl font-black mb-2">19+ Only</h1>
-                <p class="text-gray-600 font-bold mb-6">Are you legally allowed to play in Ontario?</p>
-                <div class="space-y-3">
-                    <button @click="confirmAge" class="w-full py-4 rounded-xl bg-brand-yellow text-black font-black text-xl shadow-lg hover:scale-105 transition transform btn-shine">
-                        YES, I AM 19+
-                    </button>
-                    <button @click="denyAge" class="w-full py-3 rounded-xl bg-gray-100 text-gray-400 font-bold hover:bg-gray-200">
-                        NO, EXIT
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="px-4 py-8 text-center bg-gradient-to-b from-brand-purple to-bg">
-            <h1 class="text-3xl md:text-5xl font-black mb-4 leading-tight">
-                Play Safe.<br/><span class="text-brand-yellow">Win Big.</span>
+            <h1 class="text-4xl md:text-6xl font-display font-black mb-4 leading-tight relative z-10">
+                NEXT GEN <br/>
+                <span class="text-neon">GAMING</span>
             </h1>
-            <div class="flex flex-wrap justify-center gap-2 mt-6">
+            
+            <div class="flex flex-wrap justify-center gap-3 mt-8 relative z-10">
                 <button v-for="type in ['all', 'no_wager', 'match', 'spins']" 
                     @click="filter = type"
-                    :class="filter === type ? 'bg-white text-brand-purple' : 'bg-brand-light/20 text-white hover:bg-brand-light/40'"
-                    class="px-5 py-2 rounded-full font-bold uppercase text-xs transition-all border-2 border-transparent">
+                    :class="filter === type ? 'bg-white text-void shadow-[0_0_15px_rgba(255,255,255,0.5)]' : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'"
+                    class="px-6 py-2.5 rounded-full font-bold uppercase text-[10px] tracking-widest transition-all">
                     {{ type.replace('_', ' ') }}
                 </button>
             </div>
         </div>
 
-        <main class="px-4 pb-12 max-w-6xl mx-auto flex-grow">
-            <div v-if="loading" class="text-center py-20 text-brand-neon font-bold animate-pulse">LOADING OFFERS...</div>
+        <main class="px-4 pb-12 max-w-6xl mx-auto w-full flex-grow">
+            
+            <div v-if="loading" class="text-center py-20">
+                <div class="w-12 h-12 border-4 border-neon-pink border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="mt-4 text-neon-blue font-mono text-xs animate-pulse">ESTABLISHING SECURE LINK...</p>
+            </div>
 
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                
                 <div v-for="casino in filteredCasinos" :key="casino.id" 
-                     class="bg-white text-gray-800 rounded-3xl p-5 shadow-xl relative overflow-hidden hover:-translate-y-1 transition duration-300 group">
+                     class="glass-card rounded-3xl p-6 relative overflow-hidden group transition-all duration-300 hover:-translate-y-2">
                     
-                    <div v-if="casino.hero_badge" class="absolute top-0 right-0 bg-brand-yellow text-black text-xs font-black px-4 py-1 rounded-bl-xl z-10">
+                    <div v-if="casino.hero_badge" class="absolute top-0 right-0 bg-gradient-to-bl from-neon-gold via-yellow-500 to-transparent text-black text-[10px] font-black px-4 py-1.5 rounded-bl-2xl z-20">
                         {{ casino.hero_badge }}
                     </div>
 
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 mb-4 relative rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm">
-                            <img :src="`https://logo.clearbit.com/${casino.domain}`" @error="handleImageError" class="w-full h-full object-contain p-2" :alt="casino.name">
-                        </div>
-
-                        <h2 class="text-xl font-black text-brand-purple mb-1">{{ casino.name }}</h2>
+                    <div class="flex flex-col items-center text-center relative z-10">
                         
-                        <div class="bg-purple-50 rounded-xl p-3 w-full mb-4 border border-purple-100">
-                            <p class="text-xs font-bold text-gray-400 uppercase">Welcome Bonus</p>
-                            <p class="text-md font-black text-brand-purple leading-tight">{{ casino.sign_up_bonus }}</p>
+                        <div class="w-24 h-24 mb-5 relative rounded-2xl bg-white/5 p-4 border border-white/10 shadow-inner group-hover:border-neon-pink/50 transition duration-500">
+                            <img :src="`/${casino.logo_file}`" 
+                                 @error="handleImageError"
+                                 class="w-full h-full object-contain filter drop-shadow-lg"
+                                 :alt="casino.name">
                         </div>
 
-                        <a :href="'/go/' + casino.id" target="_blank" class="w-full py-3 rounded-xl bg-brand-neon text-black font-black text-lg uppercase shadow-md hover:bg-yellow-300 transition btn-shine">
-                            Play Now
+                        <h2 class="text-2xl font-display font-black text-white mb-2">{{ casino.name }}</h2>
+                        
+                        <div class="bg-black/30 rounded-xl p-4 w-full mb-5 border border-white/5 backdrop-blur-sm group-hover:border-neon-pink/30 transition">
+                            <p class="text-[9px] font-bold text-neon-blue uppercase tracking-widest mb-1">Exclusive Offer</p>
+                            <p class="text-md font-bold text-white leading-snug">{{ casino.sign_up_bonus }}</p>
+                        </div>
+
+                        <a :href="'/go/' + casino.id" target="_blank" class="w-full py-4 rounded-xl btn-neon text-white font-black text-sm uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(247,7,118,0.5)] transition-all">
+                            Claim Bonus
                         </a>
                         
-                        <div class="mt-3 flex items-center justify-center gap-2 opacity-60">
-                            <span class="text-[10px] font-bold bg-gray-200 px-2 py-0.5 rounded">RTP {{ casino.metrics.rtp }}%</span>
-                            <span class="text-[10px] font-bold bg-gray-200 px-2 py-0.5 rounded">{{ casino.metrics.speed === 0 ? 'Instant' : casino.metrics.speed + 'H' }} Payout</span>
+                        <div class="mt-4 flex items-center justify-center gap-4 w-full">
+                            <div class="text-center">
+                                <p class="text-[9px] text-gray-500 font-bold uppercase">RTP</p>
+                                <p class="text-xs font-bold text-neon-gold">{{ casino.metrics.rtp }}%</p>
+                            </div>
+                            <div class="w-px h-6 bg-white/10"></div>
+                            <div class="text-center">
+                                <p class="text-[9px] text-gray-500 font-bold uppercase">PAYOUT</p>
+                                <p class="text-xs font-bold text-white">{{ casino.metrics.speed === 0 ? 'INSTANT' : casino.metrics.speed + 'H' }}</p>
+                            </div>
                         </div>
+
                     </div>
+                    
+                    <div class="absolute inset-0 bg-neon-pink/5 opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
                 </div>
+
             </div>
         </main>
 
-        <footer class="mt-auto bg-brand-purple/50 py-10 px-6 border-t border-white/10">
-            <div class="max-w-4xl mx-auto">
+        <footer class="mt-auto py-10 px-6 border-t border-white/5 bg-void/50 backdrop-blur-lg">
+            <div class="max-w-4xl mx-auto flex flex-col items-center">
                 
-                <div class="flex flex-wrap justify-center items-center gap-8 mb-8">
-                    <div class="h-10 w-auto opacity-90 hover:opacity-100 transition">
-                        <img src="/19.jpeg" alt="19+" class="h-full object-contain rounded">
-                    </div>
-
-                    <a href="https://www.igamingontario.ca/" target="_blank" class="h-12 w-auto opacity-80 hover:opacity-100 transition hover:scale-105">
-                        <img src="/igaming.svg" alt="iGaming Ontario" class="h-full object-contain filter brightness-0 invert">
-                    </a>
-
-                    <a href="https://www.agco.ca/" target="_blank" class="h-10 w-auto opacity-80 hover:opacity-100 transition hover:scale-105">
-                        <img src="/agco.png" alt="AGCO" class="h-full object-contain filter brightness-0 invert">
-                    </a>
-
-                    <a href="https://connexontario.ca/" target="_blank" class="h-10 w-auto opacity-80 hover:opacity-100 transition hover:scale-105">
-                        <img src="/connex.png" alt="ConnexOntario" class="h-full object-contain filter brightness-0 invert">
-                    </a>
+                <div class="flex flex-wrap justify-center items-center gap-8 mb-8 opacity-70 hover:opacity-100 transition duration-500">
+                    <img src="/19.jpeg" alt="19+" class="h-8 rounded opacity-80 hover:opacity-100">
+                    <a href="#" class="h-10 hover:scale-105 transition"><img src="/igaming.svg" class="h-full filter invert brightness-0"></a>
+                    <a href="#" class="h-8 hover:scale-105 transition"><img src="/agco.png" class="h-full filter invert brightness-0"></a>
+                    <a href="#" class="h-8 hover:scale-105 transition"><img src="/connex.png" class="h-full filter invert brightness-0"></a>
                 </div>
 
-                <div class="text-center text-purple-200/60 text-[10px] leading-relaxed">
-                    <p class="mb-2">
-                        Portkey.ca is an authorized affiliate in the Province of Ontario. All Casinos listed are licensed by the AGCO.
-                    </p>
-                    <p>
-                        Gambling can be addictive. If you or someone you know has a gambling problem, please call ConnexOntario at 1-866-531-2600.
-                        <br>Must be 19+ and physically located in Ontario to participate.
-                    </p>
-                </div>
+                <p class="text-[10px] text-gray-500 text-center max-w-xl leading-relaxed">
+                    Portkey.ca is an authorized affiliate. Gambling can be addictive, please play responsibly. 
+                    <br>Call 1-866-531-2600 for help. Must be 19+ and in Ontario.
+                </p>
             </div>
         </footer>
 
@@ -214,14 +264,23 @@
             methods: {
                 confirmAge() { this.ageVerified = true; localStorage.setItem('portkey_age_verified', 'true'); },
                 denyAge() { window.location.href = "https://google.ca"; },
+                
+                // NEON CHIP FALLBACK
                 handleImageError(e) {
                     e.target.style.display = 'none';
                     const parent = e.target.parentElement;
+                    
+                    // Create Neon Chip
                     const fallback = document.createElement('div');
-                    fallback.className = 'w-full h-full logo-fallback absolute inset-0 rounded-2xl';
-                    const name = e.target.alt || '??';
-                    fallback.innerText = name.substring(0, 2).toUpperCase();
+                    fallback.className = 'w-full h-full absolute inset-0 rounded-full border-4 border-dashed border-white/20 flex items-center justify-center animate-spin-slow';
+                    
+                    const innerText = document.createElement('div');
+                    innerText.className = 'text-2xl font-black text-neon-blue animate-none transform rotate-0';
+                    innerText.innerText = (e.target.alt || '??').substring(0, 2).toUpperCase();
+                    
                     parent.appendChild(fallback);
+                    parent.appendChild(innerText);
+                    parent.className += " flex items-center justify-center"; // Center the text
                 }
             }
         }).mount('#app');
