@@ -71,13 +71,13 @@ const DAILY_DROPS = [
 ];
 
 const SLOTS_DB = [
-    { name: "Big Bass Bonanza", provider: "Pragmatic", img: "https://placehold.co/200x150/000/FFF?text=Big+Bass", rtp: "96.7%" },
-    { name: "Starburst", provider: "NetEnt", img: "https://placehold.co/200x150/2d0036/FFF?text=Starburst", rtp: "96.1%" },
-    { name: "Book of Dead", provider: "Play'n GO", img: "https://placehold.co/200x150/362d00/FFF?text=Book+Dead", rtp: "96.2%" },
-    { name: "Sweet Bonanza", provider: "Pragmatic", img: "https://placehold.co/200x150/36002d/FFF?text=Sweet", rtp: "96.5%" },
-    { name: "Wolf Gold", provider: "Pragmatic", img: "https://placehold.co/200x150/000/FFF?text=Wolf", rtp: "96.0%" },
-    { name: "9 Masks of Fire", provider: "Microgaming", img: "https://placehold.co/200x150/4a0000/FFF?text=9+Masks", rtp: "96.2%" },
-    { name: "Cleopatra", provider: "IGT", img: "https://placehold.co/200x150/4a3b00/FFF?text=Cleopatra", rtp: "95.0%" }
+    { name: "Big Bass Bonanza", provider: "Pragmatic", img: "bigbass.jpeg", rtp: "96.7%" },
+    { name: "Starburst", provider: "NetEnt", img: "starburst.jpeg", rtp: "96.1%" },
+    { name: "Book of Dead", provider: "Play'n GO", img: "dead.jpeg", rtp: "96.2%" },
+    { name: "Sweet Bonanza", provider: "Pragmatic", img: "sweet.jpeg", rtp: "96.5%" },
+    { name: "Wolf Gold", provider: "Pragmatic", img: "wolf.jpeg", rtp: "96.0%" },
+    { name: "9 Masks of Fire", provider: "Microgaming", img: "masks.jpeg", rtp: "96.2%" },
+    { name: "Cleopatra", provider: "IGT", img: "cleopatra.jpeg", rtp: "95.0%" }
 ];
 
 const PAYMENTS_DB = [
