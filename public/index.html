@@ -6,75 +6,149 @@
     <title>Portkey | Ontario iGaming Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { electric: '#6C5CE7', mint: '#00B894', coral: '#FF7675', navy: '#2D3436', darkbg: '#1e2021' },
-                    fontFamily: { sans: ['Fredoka', 'sans-serif'], mono: ['Roboto Mono', 'monospace'] }
+                    colors: {
+                        gold: {
+                            400: '#F1C40F',
+                            500: '#D4AF37', // True Metallic Gold
+                            600: '#B7950B',
+                        },
+                        void: '#050505',   // Deeper than black
+                        surface: '#121212', // Card background
+                        surfaceHighlight: '#1E1E1E',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-glow': 'radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, rgba(5, 5, 5, 0) 70%)',
+                        'card-gradient': 'linear-gradient(145deg, #121212 0%, #0a0a0a 100%)'
+                    }
                 }
             }
         }
     </script>
-    <style>[v-cloak] { display: none; } .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</style>
+    <style>
+        [v-cloak] { display: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Gold Text Gradient */
+        .text-gold-gradient {
+            background: linear-gradient(to right, #F1C40F, #F39C12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body class="bg-darkbg text-white font-sans antialiased pb-24">
+<body class="bg-void text-white font-sans antialiased pb-24 selection:bg-gold-500 selection:text-black">
 
     <div id="app" v-cloak>
-        <div v-if="error" class="fixed inset-0 z-50 bg-navy flex items-center justify-center p-8 text-center">
-            <div>
-                <h1 class="text-4xl font-bold text-coral mb-4">Access Restricted</h1>
-                <p class="text-gray-400">Your location ({{ errorRegion }}) is not authorized for Ontario iGaming data.</p>
+        
+        <div v-if="error" class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-8 text-center backdrop-blur-md">
+            <div class="border border-red-900/50 p-8 rounded-2xl bg-surface">
+                <h1 class="text-4xl font-display font-black text-red-500 mb-4 tracking-tighter">RESTRICTED</h1>
+                <p class="text-gray-400">Location <span class="text-white font-bold">{{ errorRegion }}</span> unauthorized.</p>
             </div>
         </div>
 
-        <div v-if="!ageVerified && !error" class="fixed inset-0 z-40 bg-navy/95 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-navy border-2 border-electric rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
-                <h1 class="text-3xl font-bold text-white mb-4">19+ Only</h1>
+        <div v-if="!ageVerified && !error" class="fixed inset-0 z-40 bg-black/95 flex items-center justify-center p-4">
+            <div class="bg-surface border border-gold-500/30 rounded-2xl p-8 max-w-md w-full text-center shadow-[0_0_50px_rgba(212,175,55,0.1)]">
+                <div class="w-16 h-16 mx-auto bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mb-6">
+                    <span class="text-black font-black text-xl">19+</span>
+                </div>
+                <h1 class="text-3xl font-display font-bold text-white mb-2">Age Verification</h1>
+                <p class="text-gray-400 text-sm mb-8">Ontario iGaming regulations require us to verify you are 19+.</p>
                 <div class="grid grid-cols-2 gap-4">
-                    <button @click="denyAge" class="py-3 rounded-xl border border-coral text-coral font-bold">Exit</button>
-                    <button @click="confirmAge" class="py-3 rounded-xl bg-electric text-white font-bold shadow-lg">I am 19+</button>
+                    <button @click="denyAge" class="py-3 rounded-lg border border-gray-700 text-gray-400 font-bold hover:bg-gray-800 transition">Exit</button>
+                    <button @click="confirmAge" class="py-3 rounded-lg bg-gold-500 text-black font-bold hover:bg-gold-400 transition shadow-[0_0_20px_rgba(212,175,55,0.4)]">I am 19+</button>
                 </div>
             </div>
         </div>
 
-        <header class="p-4 flex justify-between items-center bg-navy border-b border-white/5 sticky top-0 z-30">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded bg-gradient-to-br from-electric to-mint flex items-center justify-center font-bold text-navy">P</div>
-                <span class="text-xl font-bold">Portkey</span>
+        <header class="px-6 py-5 flex justify-between items-center bg-void/80 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded border border-gold-500/50 bg-surface flex items-center justify-center">
+                    <span class="text-gold-400 font-display font-black text-xl">P</span>
+                </div>
+                <div>
+                    <span class="block text-xl font-display font-bold tracking-tight text-white">PORTKEY</span>
+                    <span class="block text-[10px] text-gold-500 uppercase tracking-widest">Analytics</span>
+                </div>
+            </div>
+            <div class="hidden sm:block px-3 py-1 rounded-full border border-green-500/20 bg-green-500/10 text-green-400 text-xs font-bold">
+                ● Live Data
             </div>
         </header>
 
-        <div v-if="loading" class="p-8 text-center text-gray-500 animate-pulse">Loading Data...</div>
-
-        <main v-else class="p-4 space-y-4">
-             <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-                <button @click="sortBy = 'rating'" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap bg-white text-navy">Top Rated</button>
-                <button @click="sortBy = 'speed'" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap bg-navy text-gray-400">Fastest Payouts</button>
+        <div class="relative pt-12 pb-8 px-6 text-center overflow-hidden">
+            <div class="absolute inset-0 bg-hero-glow z-0"></div>
+            
+            <div class="relative z-10">
+                <h1 class="text-4xl md:text-5xl font-display font-black mb-4 leading-tight">
+                    UNLOCK THE <br/>
+                    <span class="text-gold-gradient">BEST ODDS</span>
+                </h1>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">Real-time performance data for Ontario's regulated iGaming market.</p>
+                
+                <div class="inline-flex bg-surface border border-white/10 p-1 rounded-xl">
+                    <button @click="sortBy = 'rating'" :class="sortBy === 'rating' ? 'bg-gold-500 text-black shadow-lg' : 'text-gray-400 hover:text-white'" class="px-6 py-2 rounded-lg text-sm font-bold transition-all">Top Rated</button>
+                    <button @click="sortBy = 'speed'" :class="sortBy === 'speed' ? 'bg-gold-500 text-black shadow-lg' : 'text-gray-400 hover:text-white'" class="px-6 py-2 rounded-lg text-sm font-bold transition-all">Fastest Payouts</button>
+                </div>
             </div>
+        </div>
 
-            <div v-for="casino in sortedCasinos" :key="casino.id" class="bg-navy rounded-2xl p-5 border border-white/5 shadow-xl relative overflow-hidden">
-                <div v-if="casino.hero_badge" class="absolute top-0 right-0 bg-coral text-navy text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">{{ casino.hero_badge }}</div>
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-14 h-14 rounded-xl bg-gray-700 flex items-center justify-center text-2xl font-bold text-gray-500">{{ casino.logo_initials }}</div>
-                    <div>
-                        <h2 class="text-lg font-bold">{{ casino.name }}</h2>
-                        <p class="text-xs text-gray-500 font-mono">Lic: {{ casino.legal_license }}</p>
+        <div v-if="loading" class="p-12 text-center">
+            <div class="inline-block w-8 h-8 border-4 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="mt-4 text-gold-500 font-mono text-sm animate-pulse">Scanning Database...</p>
+        </div>
+
+        <main v-else class="max-w-3xl mx-auto px-4 pb-12 space-y-6">
+            
+            <div v-for="casino in sortedCasinos" :key="casino.id" class="group relative bg-card-gradient border border-white/5 rounded-2xl p-6 hover:border-gold-500/30 transition-all duration-300 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)]">
+                
+                <div class="absolute inset-0 bg-gold-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
+
+                <div v-if="casino.hero_badge" class="absolute -top-3 right-6 bg-gradient-to-r from-gold-500 to-gold-600 text-black text-[11px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-wide z-10">
+                    {{ casino.hero_badge }}
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6 relative z-10">
+                    <div class="flex items-center gap-5">
+                        <div class="w-16 h-16 rounded-xl bg-surfaceHighlight border border-white/10 flex items-center justify-center text-2xl font-display font-bold text-gray-500 group-hover:text-white group-hover:border-gold-500/50 transition">
+                            {{ casino.logo_initials }}
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-display font-bold text-white group-hover:text-gold-400 transition">{{ casino.name }}</h2>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="bg-white/5 text-gray-400 text-[10px] px-2 py-0.5 rounded border border-white/5 font-mono">LIC: {{ casino.legal_license }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3 mb-5">
-                    <div class="bg-darkbg/50 p-3 rounded-xl border border-white/5">
-                        <p class="text-xs text-gray-400 mb-1">Payout Speed</p>
-                        <p class="text-xl font-mono font-bold text-mint">{{ casino.metrics.payout_speed_hours }}h</p>
+
+                <div class="grid grid-cols-2 gap-4 mb-6 relative z-10">
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5 text-center">
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Payout Speed</p>
+                        <p class="text-2xl font-display font-bold text-white">{{ casino.metrics.payout_speed_hours }}<span class="text-sm text-gray-500 ml-1">HRS</span></p>
                     </div>
-                    <div class="bg-darkbg/50 p-3 rounded-xl border border-white/5">
-                        <p class="text-xs text-gray-400 mb-1">RTP (Avg)</p>
-                        <p class="text-xl font-mono font-bold text-electric">{{ casino.metrics.rtp_avg }}%</p>
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5 text-center">
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Return to Player</p>
+                        <p class="text-2xl font-display font-bold text-gold-400">{{ casino.metrics.rtp_avg }}<span class="text-sm text-gray-500 ml-1">%</span></p>
                     </div>
                 </div>
-                <a :href="'/go/' + casino.id" target="_blank" class="block w-full text-center py-3 bg-white text-navy font-bold rounded-xl">View Data</a>
+
+                <a :href="'/go/' + casino.id" target="_blank" class="relative z-10 block w-full text-center py-4 bg-surfaceHighlight border border-white/10 text-white font-bold rounded-xl hover:bg-gold-500 hover:text-black hover:border-gold-500 transition-all duration-300 uppercase tracking-wider text-sm">
+                    Analyze Data
+                </a>
             </div>
+            
         </main>
     </div>
 
@@ -95,9 +169,8 @@
             async mounted() {
                 if(localStorage.getItem('portkey_age_verified') === 'true') this.ageVerified = true;
                 
-                // FETCH DATA FROM API
                 try {
-                    // Check if we are in dev mode via URL
+                    // Check URL for dev mode
                     const urlParams = new URLSearchParams(window.location.search);
                     const devMode = urlParams.get('dev');
                     const apiUrl = devMode ? `/api/casinos?dev=true` : `/api/casinos`;
@@ -125,8 +198,13 @@
                 }
             },
             methods: {
-                confirmAge() { this.ageVerified = true; localStorage.setItem('portkey_age_verified', 'true'); },
-                denyAge() { window.location.href = "https://google.ca"; }
+                confirmAge() { 
+                    this.ageVerified = true; 
+                    localStorage.setItem('portkey_age_verified', 'true'); 
+                },
+                denyAge() { 
+                    window.location.href = "https://google.ca"; 
+                }
             }
         }).mount('#app');
     </script>
