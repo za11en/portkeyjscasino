@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portkey | Ontario iGaming</title>
+    <title>Portkey | Ontario iGaming Authority</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -20,6 +20,15 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         display: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
                     }
                 }
             }
@@ -38,6 +47,17 @@
 
     <div id="app" v-cloak class="flex flex-col flex-grow">
 
+        <div v-if="dailyDrops.length > 0" class="bg-neon-purple/20 border-b border-neon-purple/30 overflow-hidden py-2 relative">
+            <div class="whitespace-nowrap animate-marquee flex gap-8 items-center text-xs font-bold tracking-widest text-neon-cyan">
+                <span v-for="drop in dailyDrops" :key="drop.casino" class="flex items-center gap-2">
+                    <span class="text-white">🔥 {{ drop.casino }}:</span> {{ drop.offer }}
+                </span>
+                <span v-for="drop in dailyDrops" :key="drop.casino + '_dup'" class="flex items-center gap-2">
+                    <span class="text-white">🔥 {{ drop.casino }}:</span> {{ drop.offer }}
+                </span>
+            </div>
+        </div>
+
         <header class="sticky top-0 z-50 glass-panel border-b border-white/5 bg-dark/90 backdrop-blur-md">
             <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -53,7 +73,7 @@
 
         <div class="px-4 py-10 text-center">
             <h1 class="text-3xl md:text-5xl font-display font-black mb-4 leading-tight">
-                TOP ONTARIO <span class="text-neon-yellow">BONUSES</span>
+                ONTARIO'S <span class="text-neon-yellow">TOP 40</span>
             </h1>
             <div class="flex flex-wrap justify-center gap-2">
                 <button v-for="type in ['all', 'no_wager', 'match', 'lossback']" @click="filter = type" 
@@ -64,45 +84,45 @@
             </div>
         </div>
 
-        <main class="max-w-5xl mx-auto w-full px-4 pb-12 space-y-12">
+        <main class="max-w-5xl mx-auto w-full px-4 pb-12 space-y-16">
             
-            <div v-if="loading" class="text-center py-12"><div class="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mx-auto"></div></div>
-            
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="casino in filteredCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300">
-                    
-                    <div v-if="casino.hero_badge" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon-cyan text-dark text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.4)] z-20">
-                        {{ casino.hero_badge }}
+            <div>
+                <div v-if="loading" class="text-center py-12"><div class="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mx-auto"></div></div>
+                
+                <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="casino in visibleCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300">
+                        <div v-if="casino.hero_badge" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon-cyan text-dark text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.4)] z-20">
+                            {{ casino.hero_badge }}
+                        </div>
+                        <div class="text-center mt-3">
+                            <div class="h-16 mb-4 flex items-center justify-center">
+                                <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg" :alt="casino.name">
+                            </div>
+                            <div class="mb-5">
+                                <p class="text-2xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p>
+                                <p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-5">
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
+                                    Wager: <span class="text-white">{{ casino.wagering_req }}</span>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
+                                    Min: <span class="text-white">{{ casino.min_deposit }}</span>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
+                                    Speed: <span class="text-white">{{ casino.metrics.speed }}</span>
+                                </div>
+                            </div>
+                            <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider">VISIT SITE</a>
+                            <p class="text-[9px] text-gray-500 mt-3">T&Cs Apply. 19+. Ontario Only.</p>
+                        </div>
                     </div>
-
-                    <div class="text-center mt-3">
-                        <div class="h-16 mb-4 flex items-center justify-center">
-                            <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg" :alt="casino.name">
-                        </div>
-
-                        <div class="mb-5">
-                            <p class="text-2xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p>
-                            <p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p>
-                        </div>
-
-                        <div class="flex justify-center gap-2 mb-5">
-                            <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
-                                Wager: <span class="text-white">{{ casino.wagering_req }}</span>
-                            </div>
-                            <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
-                                Min: <span class="text-white">{{ casino.min_deposit }}</span>
-                            </div>
-                             <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">
-                                Speed: <span class="text-white">{{ casino.metrics.speed }}</span>
-                            </div>
-                        </div>
-
-                        <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider">
-                            VISIT SITE
-                        </a>
-                        
-                        <p class="text-[9px] text-gray-500 mt-3">T&Cs Apply. 19+. Ontario Only.</p>
-                    </div>
+                </div>
+                
+                <div v-if="filteredCasinos.length > visibleCount" class="text-center mt-8">
+                    <button @click="visibleCount += 9" class="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold tracking-widest transition">
+                        LOAD MORE CASINOS
+                    </button>
                 </div>
             </div>
 
@@ -112,6 +132,7 @@
                     <div v-for="slot in slots" :key="slot.name" class="min-w-[140px] glass-panel rounded-xl p-3 hover:bg-white/5 cursor-pointer transition">
                         <div class="w-full h-24 bg-black/40 rounded-lg mb-2 overflow-hidden relative">
                              <img :src="slot.img" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition">
+                             <div class="absolute top-1 right-1 bg-neon-yellow text-black text-[9px] font-bold px-1 rounded-sm">RTP {{ slot.rtp }}</div>
                         </div>
                         <p class="font-bold text-xs truncate">{{ slot.name }}</p>
                         <p class="text-[9px] text-gray-500">{{ slot.provider }}</p>
@@ -119,27 +140,36 @@
                 </div>
             </div>
 
-            <div class="glass-panel rounded-2xl p-6 bg-gradient-to-br from-white/5 to-transparent">
-                <h3 class="text-xl font-display font-bold mb-4">ACCEPTED PAYMENTS</h3>
-                <div class="flex flex-wrap gap-4">
-                    <div v-for="pay in payments" :key="pay.name" class="flex items-center gap-3 bg-black/30 px-4 py-2 rounded-lg border border-white/5">
-                        <div class="w-8 h-8 rounded bg-white text-black flex items-center justify-center font-bold text-[10px]">{{ pay.name.substring(0,2) }}</div>
-                        <div>
-                            <p class="font-bold text-xs">{{ pay.name }}</p>
-                            <p class="text-[9px] text-gray-400">{{ pay.time }}</p>
-                        </div>
+            <div class="glass-panel rounded-2xl p-8 border-neon-cyan/20">
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-cyan">SKILL</span> EDGE
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-black/30 p-5 rounded-xl border border-white/5">
+                        <div class="text-neon-pink text-xl mb-3">⚡</div>
+                        <h4 class="font-bold text-sm mb-2">Volatility vs. RTP</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            <strong>RTP (Return to Player)</strong> is the theoretical long-term payout (e.g., 96%). 
+                            <strong>Volatility</strong> is the risk. High volatility games pay out less often but in larger amounts. 
+                            Low volatility pays smaller amounts frequently. Choose based on your bankroll style.
+                        </p>
                     </div>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-8">
-                <div>
-                    <h4 class="text-white font-bold mb-2">Why Portkey?</h4>
-                    <p>We provide real-time data on Ontario's regulated iGaming market. All listed operators are licensed by the AGCO and verified for fair play and secure payouts.</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-2">Understanding Bonuses</h4>
-                    <p>Bonuses often come with wagering requirements (e.g., 15x). This means you must bet the bonus amount 15 times before withdrawing. Look for "No Wager" offers for the best value.</p>
+                    <div class="bg-black/30 p-5 rounded-xl border border-white/5">
+                        <div class="text-neon-yellow text-xl mb-3">🔄</div>
+                        <h4 class="font-bold text-sm mb-2">The Wagering Math</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            A $100 bonus with <strong>30x wagering</strong> means you must bet $3,000 ($100 x 30) before withdrawing winnings. 
+                            Always check if wagering applies to just the bonus or (Deposit + Bonus), which doubles the requirement.
+                        </p>
+                    </div>
+                    <div class="bg-black/30 p-5 rounded-xl border border-white/5">
+                        <div class="text-neon-cyan text-xl mb-3">🛡️</div>
+                        <h4 class="font-bold text-sm mb-2">Smart Bankroll</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Never bet more than 1-2% of your total bankroll on a single spin. 
+                            If you have $100, stick to $1 or $0.50 spins. This gives you enough variance to hit a bonus round.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -165,7 +195,11 @@
     <script>
         const { createApp } = Vue;
         createApp({
-            data() { return { casinos: [], slots: [], payments: [], filter: 'all', ageVerified: false, loading: true, error: false, errorRegion: '' } },
+            data() { return { 
+                casinos: [], slots: [], payments: [], dailyDrops: [], 
+                filter: 'all', ageVerified: false, loading: true, error: false, errorRegion: '',
+                visibleCount: 9 
+            }},
             async mounted() {
                 if(localStorage.getItem('portkey_age_verified') === 'true') this.ageVerified = true;
                 try {
@@ -173,14 +207,23 @@
                     const apiUrl = urlParams.get('dev') ? `/api/data?dev=true` : `/api/data`;
                     const res = await fetch(apiUrl);
                     if (res.status === 403) { const data = await res.json(); this.error = true; this.errorRegion = data.region; }
-                    else { const data = await res.json(); this.casinos = data.casinos; this.slots = data.slots; this.payments = data.payments; }
+                    else { 
+                        const data = await res.json(); 
+                        this.casinos = data.casinos; 
+                        this.slots = data.slots; 
+                        this.payments = data.payments;
+                        this.dailyDrops = data.daily_drops;
+                    }
                 } catch (e) { console.error(e); } finally { this.loading = false; }
             },
-            computed: { filteredCasinos() { return this.filter === 'all' ? this.casinos : this.casinos.filter(c => c.bonus_type === this.filter); } },
+            computed: { 
+                filteredCasinos() { return this.filter === 'all' ? this.casinos : this.casinos.filter(c => c.bonus_type === this.filter); },
+                visibleCasinos() { return this.filteredCasinos.slice(0, this.visibleCount); }
+            },
             methods: {
                 confirmAge() { this.ageVerified = true; localStorage.setItem('portkey_age_verified', 'true'); },
                 denyAge() { window.location.href = "https://google.ca"; },
-                handleImageError(e) { e.target.style.display='none'; e.target.parentElement.innerHTML = `<div class='text-white font-bold'>${e.target.alt}</div>`; }
+                handleImageError(e) { e.target.style.display='none'; e.target.parentElement.innerHTML = `<div class='text-white font-bold text-xs'>${e.target.alt}</div>`; }
             }
         }).mount('#app');
     </script>
