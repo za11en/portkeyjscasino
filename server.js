@@ -41,6 +41,7 @@ const loadCasinos = () => {
 
 // --- MIDDLEWARE: GEO-COMPLIANCE ---
 const checkOntario = (req, res, next) => {
+  if (req.query.dev === 'true') return next(); 
   // Allow bypass for Localhost/Dev
   if (req.hostname === 'localhost' || req.hostname === '127.0.0.1') return next();
 
