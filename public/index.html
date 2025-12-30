@@ -9,22 +9,13 @@
     <link rel="stylesheet" href="/css/style.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/js/theme.js"></script> <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/js/theme.js"></script> 
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="text-white font-sans min-h-screen flex flex-col selection:bg-neon-yellow selection:text-black">
 
     <div id="app" v-cloak class="flex flex-col flex-grow">
-        <div v-if="dailyDrops.length > 0" class="bg-neon-purple/20 border-b border-neon-purple/30 overflow-hidden py-2 relative">
-            <div class="whitespace-nowrap animate-marquee flex gap-8 items-center text-xs font-bold tracking-widest text-neon-cyan">
-                <span v-for="drop in dailyDrops" :key="drop.casino" class="flex items-center gap-2">
-                    <span class="text-white">🔥 {{ drop.casino }}:</span> {{ drop.offer }}
-                </span>
-                <span v-for="drop in dailyDrops" :key="drop.casino + '_dup'" class="flex items-center gap-2">
-                    <span class="text-white">🔥 {{ drop.casino }}:</span> {{ drop.offer }}
-                </span>
-            </div>
-        </div>
-
+        
         <header class="sticky top-0 z-50 glass-panel border-b border-white/5 bg-dark/90 backdrop-blur-md">
             <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -38,23 +29,7 @@
             </div>
         </header>
 
-        <section v-if="dailyRewardCasinos.length > 0" class="mt-8 px-4 max-w-6xl mx-auto">
-            <h2 class="text-xl font-display font-bold mb-4 flex items-center gap-2">
-                <span class="text-neon-cyan">TODAY'S</span> FREE REWARDS ({{ todayName }})
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                <div v-for="c in dailyRewardCasinos" :key="c.id" class="glass-panel p-3 rounded-xl flex flex-col items-center text-center hover:bg-white/5 transition">
-                    <div class="h-8 mb-2 flex items-center justify-center">
-                        <img :src="`/${c.logo_file}`" class="max-h-full max-w-[80px] object-contain">
-                    </div>
-                    <div class="text-[10px] font-bold text-neon-yellow uppercase tracking-wider mb-1">FREE DAILY</div>
-                    <div class="text-xs font-medium text-gray-300 leading-tight">{{ c.daily_reward }}</div>
-                    <a :href="'/go/' + c.id" target="_blank" class="mt-2 w-full py-1 bg-white/10 hover:bg-neon-cyan hover:text-black rounded text-[9px] font-bold uppercase transition">Claim</a>
-                </div>
-            </div>
-        </section>
-
-        <div class="px-4 py-8 text-center">
+        <div class="px-4 py-8 text-center mt-4">
             <h1 class="text-3xl md:text-5xl font-display font-black mb-4 leading-tight">
                 ONTARIO'S <span class="text-neon-yellow">TOP 40</span>
             </h1>
@@ -82,8 +57,8 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     <div v-for="reward in currentDayData.rewards" :key="reward.id" class="glass-panel p-3 rounded-xl flex flex-col items-center text-center hover:bg-white/5 transition animate-fade-in">
-                        <div class="h-8 mb-2 flex items-center justify-center">
-                            <img :src="`/${reward.logo}`" class="max-h-full max-w-[80px] object-contain">
+                        <div v-if="reward.logo" class="h-8 mb-2 flex items-center justify-center">
+                            <img :src="`/${reward.logo}`" @error="handleImageError" class="max-h-full max-w-[80px] object-contain">
                         </div>
                         <div class="text-[10px] font-bold text-neon-yellow uppercase tracking-wider mb-1">{{ reward.type }}</div>
                         <div class="text-xs font-medium text-gray-300 leading-tight">{{ reward.reward }}</div>
@@ -98,11 +73,19 @@
                     <div v-for="casino in visibleCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300 flex flex-col">
                          <div v-if="casino.hero_badge" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon-cyan text-dark text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.4)] z-20">{{ casino.hero_badge }}</div>
                          <div class="text-center mt-3 flex-grow">
-                            <div class="h-16 mb-4 flex items-center justify-center"><img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg"></div>
+                            <div class="h-16 mb-4 flex items-center justify-center">
+                                <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg">
+                            </div>
                             <div class="mb-5"><p class="text-2xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p><p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p></div>
                             <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider mt-auto">VISIT SITE</a>
                         </div>
                     </div>
+                </div>
+                
+                <div v-if="filteredCasinos.length > visibleCount" class="text-center mt-8">
+                    <button @click="visibleCount += 9" class="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold tracking-widest transition">
+                        LOAD MORE CASINOS
+                    </button>
                 </div>
             </div>
 
@@ -177,7 +160,6 @@
             </div>
 
         </main>
-
 
         <footer class="mt-auto py-10 px-6 border-t border-white/5 bg-black/40">
             <div class="max-w-4xl mx-auto flex flex-col items-center gap-6">
