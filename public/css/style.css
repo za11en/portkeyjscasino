@@ -1,0 +1,26 @@
+[v-cloak] { display: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+body { 
+    background-color: #080112; 
+    background-image: radial-gradient(circle at 50% 0%, #2a0a4a 0%, #080112 70%); 
+    background-attachment: fixed; 
+}
+
+.glass-panel { 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(12px); 
+}
+
+.btn-action { 
+    background: linear-gradient(180deg, #FFD600 0%, #E5A500 100%); 
+    color: black; 
+    box-shadow: 0 4px 0 #B28000; 
+    transition: transform 0.1s; 
+}
+
+.btn-action:active { 
+    transform: translateY(4px); 
+    box-shadow: none; 
+}
