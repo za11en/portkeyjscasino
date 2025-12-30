@@ -9,6 +9,10 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// --- CRITICAL FIX FOR VERCEL ---
+// This tells Express to trust the Load Balancer's IP forwarding
+app.set('trust proxy', 1); 
+
 // --- CONFIGURATION ---
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -17,7 +21,6 @@ app.use(cookieParser());
 app.use(requestIp.mw());
 
 // --- SECURITY ---
-// Relaxed CSP for inline scripts (Vue/Tailwind CDN)
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -39,20 +42,39 @@ const loadCasinos = () => {
   }
 };
 
-// --- MIDDLEWARE: GEO-COMPLIANCE ---
+// --- MIDDLEWARE: HYBRID GEO-COMPLIANCE ---
 const checkOntario = (req, res, next) => {
-  if (req.query.dev === 'true') return next(); 
-  // Allow bypass for Localhost/Dev
-  if (req.hostname === 'localhost' || req.hostname === '127.0.0.1') return next();
+  
+  // 1. GOD MODE (Bypass for Dev/Testing)
+  // Usage: https://your-app.vercel.app/?dev=true
+  if (req.query.dev === 'true') {
+      return next();
+  }
 
+  // 2. VERCEL NATIVE CHECK (Most Accurate)
+  // Vercel does geolocation at the "Edge" and passes headers.
+  const vercelCountry = req.headers['x-vercel-ip-country'];
+  const vercelRegion = req.headers['x-vercel-ip-country-region']; // Returns 'ON' for Ontario
+
+  if (vercelCountry) {
+      if (vercelCountry === 'CA' && vercelRegion === 'ON') {
+          return next(); // Approved via Vercel Header
+      }
+      // If Vercel says you aren't in ON, block immediately
+      return res.status(403).send(`<h1>Region Restricted (Vercel)</h1><p>Detected: ${vercelRegion}, ${vercelCountry}</p>`);
+  }
+
+  // 3. FALLBACK: STANDARD IP CHECK (For Hostinger/Localhost)
   const ip = req.clientIp;
-  const geo = geoip.lookup(ip);
+  
+  // Localhost Bypass
+  if (ip === '::1' || ip === '127.0.0.1' || req.hostname === 'localhost') {
+      return next();
+  }
 
-  // If we can't determine geo, we default to BLOCK in production for safety
-  // For this MVP, if geo is null, we log it and proceed (soft fail)
+  const geo = geoip.lookup(ip);
   if (geo && geo.region !== 'ON' && geo.country === 'CA') {
-     // User is in Canada but not Ontario
-     return res.status(403).send('<h1>Region Restricted</h1><p>This site is authorized for Ontario residents only.</p>');
+     return res.status(403).send(`<h1>Region Restricted</h1><p>Detected: ${geo.region}</p>`);
   }
   
   // Strict International Block
@@ -65,21 +87,29 @@ const checkOntario = (req, res, next) => {
 
 // --- ROUTES ---
 
-// 1. Main Dashboard
+// 1. DEBUG ROUTE (Use this to see what Vercel sees!)
+app.get('/debug', (req, res) => {
+    res.json({
+        ip: req.clientIp,
+        vercelCountry: req.headers['x-vercel-ip-country'],
+        vercelRegion: req.headers['x-vercel-ip-country-region'],
+        headers: req.headers
+    });
+});
+
+// 2. Main Dashboard
 app.get('/', checkOntario, (req, res) => {
   const casinos = loadCasinos();
   res.render('dashboard', { 
-    casinos: JSON.stringify(casinos) // Pass data to frontend
+    casinos: JSON.stringify(casinos)
   });
 });
 
-// 2. Affiliate Redirection (Tracker)
+// 3. Affiliate Redirection
 app.get('/go/:id', (req, res) => {
   const casinos = loadCasinos();
   const target = casinos.find(c => c.id === req.params.id);
-  
   if (target) {
-    console.log(`[CLICK] User redirected to ${target.id} at ${new Date().toISOString()}`);
     res.redirect(target.affiliate_link);
   } else {
     res.redirect('/');
@@ -89,3 +119,4 @@ app.get('/go/:id', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Portkey Server is running on port ${PORT}`);
 });
+
