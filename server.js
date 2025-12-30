@@ -4,13 +4,11 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const requestIp = require('request-ip');
 const geoip = require('geoip-lite');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- CRITICAL FIX FOR VERCEL ---
-// This tells Express to trust the Load Balancer's IP forwarding
 app.set('trust proxy', 1); 
 
 // --- CONFIGURATION ---
@@ -31,53 +29,82 @@ app.use(
   })
 );
 
-// --- DATA LOADER ---
-const loadCasinos = () => {
-  try {
-    const rawData = fs.readFileSync(path.join(__dirname, 'data', 'casinos.json'));
-    return JSON.parse(rawData);
-  } catch (err) {
-    console.error("Database Error:", err);
-    return [];
+// --- THE "IMMUTABLE" DATABASE ---
+// No more file reading errors. The data is now part of the code.
+const CASINO_DB = [
+  {
+    "id": "betmgm-on",
+    "name": "BetMGM Ontario",
+    "affiliate_link": "https://www.betmgm.com",
+    "logo_initials": "BM",
+    "legal_license": "OPIG1234567",
+    "metrics": {
+      "payout_speed_hours": 24,
+      "rtp_avg": 96.5,
+      "game_count": 850,
+      "live_dealer_tables": 45
+    },
+    "tags": ["Fast Payout", "High Roller"],
+    "hero_badge": "Best for Poker"
+  },
+  {
+    "id": "thescore-bet",
+    "name": "theScore Bet",
+    "affiliate_link": "https://thescore.bet",
+    "logo_initials": "SB",
+    "legal_license": "OPIG9876543",
+    "metrics": {
+      "payout_speed_hours": 12,
+      "rtp_avg": 95.8,
+      "game_count": 400,
+      "live_dealer_tables": 10
+    },
+    "tags": ["Mobile First", "Sports"],
+    "hero_badge": "Top App UI"
+  },
+  {
+    "id": "northstar-bets",
+    "name": "NorthStar Bets",
+    "affiliate_link": "https://northstarbets.ca",
+    "logo_initials": "NS",
+    "legal_license": "OPIG5551212",
+    "metrics": {
+      "payout_speed_hours": 48,
+      "rtp_avg": 97.1,
+      "game_count": 1200,
+      "live_dealer_tables": 60
+    },
+    "tags": ["Huge Library", "Ontario Native"],
+    "hero_badge": "Most Games"
   }
+];
+
+const loadCasinos = () => {
+    return CASINO_DB;
 };
 
-// --- MIDDLEWARE: HYBRID GEO-COMPLIANCE ---
+// --- MIDDLEWARE: GEO-COMPLIANCE ---
 const checkOntario = (req, res, next) => {
-  
-  // 1. GOD MODE (Bypass for Dev/Testing)
-  // Usage: https://your-app.vercel.app/?dev=true
-  if (req.query.dev === 'true') {
-      return next();
-  }
+  // 1. GOD MODE (Bypass)
+  if (req.query.dev === 'true') return next();
 
-  // 2. VERCEL NATIVE CHECK (Most Accurate)
-  // Vercel does geolocation at the "Edge" and passes headers.
+  // 2. VERCEL CHECK
   const vercelCountry = req.headers['x-vercel-ip-country'];
-  const vercelRegion = req.headers['x-vercel-ip-country-region']; // Returns 'ON' for Ontario
-
+  const vercelRegion = req.headers['x-vercel-ip-country-region'];
+  
   if (vercelCountry) {
-      if (vercelCountry === 'CA' && vercelRegion === 'ON') {
-          return next(); // Approved via Vercel Header
-      }
-      // If Vercel says you aren't in ON, block immediately
+      if (vercelCountry === 'CA' && vercelRegion === 'ON') return next();
       return res.status(403).send(`<h1>Region Restricted (Vercel)</h1><p>Detected: ${vercelRegion}, ${vercelCountry}</p>`);
   }
 
-  // 3. FALLBACK: STANDARD IP CHECK (For Hostinger/Localhost)
+  // 3. FALLBACK IP CHECK
   const ip = req.clientIp;
-  
-  // Localhost Bypass
-  if (ip === '::1' || ip === '127.0.0.1' || req.hostname === 'localhost') {
-      return next();
-  }
+  if (ip === '::1' || ip === '127.0.0.1' || req.hostname === 'localhost') return next();
 
   const geo = geoip.lookup(ip);
   if (geo && geo.region !== 'ON' && geo.country === 'CA') {
      return res.status(403).send(`<h1>Region Restricted</h1><p>Detected: ${geo.region}</p>`);
   }
-  
-  // Strict International Block
   if (geo && geo.country !== 'CA') {
      return res.status(403).send('<h1>Access Denied</h1><p>Not available in your country.</p>');
   }
@@ -87,28 +114,14 @@ const checkOntario = (req, res, next) => {
 
 // --- ROUTES ---
 
-// 1. DEBUG ROUTE (Use this to see what Vercel sees!)
-app.get('/debug', (req, res) => {
-    res.json({
-        ip: req.clientIp,
-        vercelCountry: req.headers['x-vercel-ip-country'],
-        vercelRegion: req.headers['x-vercel-ip-country-region'],
-        headers: req.headers
-    });
-});
-
-// 2. Main Dashboard
 app.get('/', checkOntario, (req, res) => {
-  const casinos = loadCasinos();
   res.render('dashboard', { 
-    casinos: JSON.stringify(casinos)
+    casinos: JSON.stringify(loadCasinos())
   });
 });
 
-// 3. Affiliate Redirection
 app.get('/go/:id', (req, res) => {
-  const casinos = loadCasinos();
-  const target = casinos.find(c => c.id === req.params.id);
+  const target = loadCasinos().find(c => c.id === req.params.id);
   if (target) {
     res.redirect(target.affiliate_link);
   } else {
