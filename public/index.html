@@ -15,7 +15,7 @@
 <body class="text-white font-sans min-h-screen flex flex-col selection:bg-neon-yellow selection:text-black">
 
     <div id="app" v-cloak class="flex flex-col flex-grow">
-        
+
         <header class="sticky top-0 z-50 glass-panel border-b border-white/5 bg-dark/90 backdrop-blur-md">
             <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -28,6 +28,29 @@
                 </div>
             </div>
         </header>
+
+        <section v-if="weeklySchedule.length > 0" class="mt-8 max-w-6xl mx-auto px-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-display font-bold flex items-center gap-2">
+                    <span class="text-neon-cyan">{{ currentDayLabel.toUpperCase() }}'S</span> DROPS
+                </h2>
+                <div class="flex gap-2">
+                    <button @click="prevDay" class="w-8 h-8 rounded-full bg-white/10 hover:bg-neon-cyan hover:text-black flex items-center justify-center transition">←</button>
+                    <button @click="nextDay" class="w-8 h-8 rounded-full bg-white/10 hover:bg-neon-cyan hover:text-black flex items-center justify-center transition">→</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div v-for="reward in currentDayData.rewards" :key="reward.id" class="glass-panel p-3 rounded-xl flex flex-col items-center text-center hover:bg-white/5 transition animate-fade-in">
+                    <div v-if="reward.logo" class="h-8 mb-2 flex items-center justify-center">
+                        <img :src="`/${reward.logo}`" @error="handleImageError" class="max-h-full max-w-[80px] object-contain">
+                    </div>
+                    <div class="text-[10px] font-bold text-neon-yellow uppercase tracking-wider mb-1">{{ reward.type }}</div>
+                    <div class="text-xs font-medium text-gray-300 leading-tight">{{ reward.reward }}</div>
+                    <a href="#" class="mt-2 w-full py-1 bg-white/10 hover:bg-neon-cyan hover:text-black rounded text-[9px] font-bold uppercase transition">Claim</a>
+                </div>
+            </div>
+        </section>
 
         <div class="px-4 py-8 text-center mt-4">
             <h1 class="text-3xl md:text-5xl font-display font-black mb-4 leading-tight">
@@ -44,53 +67,69 @@
 
         <main class="max-w-6xl mx-auto w-full px-4 pb-12 space-y-16">
             
-            <section v-if="weeklySchedule.length > 0" class="mt-8">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-display font-bold flex items-center gap-2">
-                        <span class="text-neon-cyan">{{ currentDayData.day.toUpperCase() }}'S</span> DROPS
-                    </h2>
-                    <div class="flex gap-2">
-                        <button @click="prevDay" class="w-8 h-8 rounded-full bg-white/10 hover:bg-neon-cyan hover:text-black flex items-center justify-center transition">←</button>
-                        <button @click="nextDay" class="w-8 h-8 rounded-full bg-white/10 hover:bg-neon-cyan hover:text-black flex items-center justify-center transition">→</button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    <div v-for="reward in currentDayData.rewards" :key="reward.id" class="glass-panel p-3 rounded-xl flex flex-col items-center text-center hover:bg-white/5 transition animate-fade-in">
-                        <div v-if="reward.logo" class="h-8 mb-2 flex items-center justify-center">
-                            <img :src="`/${reward.logo}`" @error="handleImageError" class="max-h-full max-w-[80px] object-contain">
-                        </div>
-                        <div class="text-[10px] font-bold text-neon-yellow uppercase tracking-wider mb-1">{{ reward.type }}</div>
-                        <div class="text-xs font-medium text-gray-300 leading-tight">{{ reward.reward }}</div>
-                        <a href="#" class="mt-2 w-full py-1 bg-white/10 hover:bg-neon-cyan hover:text-black rounded text-[9px] font-bold uppercase transition">Claim</a>
-                    </div>
-                </div>
-            </section>
-
             <div>
                 <div v-if="loading" class="text-center py-12"><div class="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mx-auto"></div></div>
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div v-for="casino in visibleCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300 flex flex-col">
                          <div v-if="casino.hero_badge" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon-cyan text-dark text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.4)] z-20">{{ casino.hero_badge }}</div>
+                         <div class="absolute top-4 right-4 flex flex-col gap-1 items-end">
+                            <span v-if="casino.daily_reward" class="bg-neon-pink/20 text-neon-pink border border-neon-pink/30 text-[8px] font-bold px-2 py-0.5 rounded uppercase">Daily Drop</span>
+                            <span v-if="casino.referral_bonus" class="bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30 text-[8px] font-bold px-2 py-0.5 rounded uppercase">Referral</span>
+                        </div>
                          <div class="text-center mt-3 flex-grow">
                             <div class="h-16 mb-4 flex items-center justify-center">
                                 <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg">
                             </div>
                             <div class="mb-5"><p class="text-2xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p><p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p></div>
+                            <div class="flex justify-center gap-2 mb-5">
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">Wager: <span class="text-white">{{ casino.wagering_req || '-' }}</span></div>
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">Min: <span class="text-white">{{ casino.min_deposit || '-' }}</span></div>
+                                <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">Speed: <span class="text-white">{{ casino.metrics?.speed || '-' }}</span></div>
+                            </div>
                             <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider mt-auto">VISIT SITE</a>
                         </div>
                     </div>
                 </div>
                 
                 <div v-if="filteredCasinos.length > visibleCount" class="text-center mt-8">
-                    <button @click="visibleCount += 9" class="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold tracking-widest transition">
-                        LOAD MORE CASINOS
-                    </button>
+                    <button @click="visibleCount += 9" class="px-8 py-3 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold tracking-widest transition">LOAD MORE CASINOS</button>
+                </div>
+            </div>
+
+            <div v-if="referralCasinos.length > 0">
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-pink">REFER</span> & EARN
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div v-for="c in referralCasinos" :key="c.id" class="glass-panel rounded-xl p-4 flex items-center gap-4 border-l-4 border-l-neon-pink">
+                         <div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-full flex items-center justify-center p-2"><img :src="`/${c.logo_file}`" @error="handleImageError" class="max-w-full max-h-full object-contain"></div>
+                         <div><h4 class="font-bold text-sm">{{ c.name }}</h4><p class="text-xs text-neon-yellow font-bold">{{ c.referral_bonus }}</p><a :href="'/go/' + c.id" class="text-[10px] text-gray-400 underline hover:text-white mt-1 block">Get Link</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-yellow">LOYALTY</span> MATRIX
+                </h3>
+                <div class="glass-panel rounded-2xl overflow-hidden overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white/5 uppercase text-[10px] font-bold tracking-wider text-gray-400">
+                            <tr><th class="px-6 py-4">Casino</th><th class="px-6 py-4">Daily Bonus?</th><th class="px-6 py-4">Refer-a-Friend</th><th class="px-6 py-4">Loyalty Program</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            <tr v-for="c in casinos.filter(x => x.daily_reward || x.referral_bonus || x.loyalty_tier).slice(0, 10)" :key="c.id + '_chart'" class="hover:bg-white/5 transition">
+                                <td class="px-6 py-4 font-bold flex items-center gap-3"><div class="w-6 h-6 flex items-center justify-center"><img :src="`/${c.logo_file}`" @error="handleImageError" class="max-w-full max-h-full object-contain"></div> {{ c.name }}</td>
+                                <td class="px-6 py-4"><span v-if="c.daily_reward" class="text-neon-cyan text-xs">✔ {{ c.daily_reward }}</span><span v-else class="text-gray-600">-</span></td>
+                                <td class="px-6 py-4"><span v-if="c.referral_bonus" class="text-neon-pink text-xs">✔ {{ c.referral_bonus }}</span><span v-else class="text-gray-600">-</span></td>
+                                <td class="px-6 py-4"><span v-if="c.loyalty_tier" class="text-neon-yellow text-xs">★ {{ c.loyalty_tier }}</span><span v-else class="text-gray-600">-</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <div v-if="slotsData.trending" class="space-y-8">
-                
                 <div>
                     <h3 class="text-xl font-display font-black mb-4 text-neon-pink">🔥 TRENDING NOW</h3>
                     <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x">
@@ -103,58 +142,55 @@
                         </div>
                     </div>
                 </div>
-
-                <div>
-                    <h3 class="text-xl font-display font-black mb-4 text-neon-cyan">💎 HIGHEST RTP (BEST ODDS)</h3>
-                    <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x">
-                        <div v-for="slot in slotsData.high_rtp" :key="slot.name" class="snap-center flex-shrink-0 w-[140px] glass-panel p-2 rounded-xl border border-white/5 hover:border-neon-cyan/50 transition">
-                            <div class="relative aspect-square rounded-lg overflow-hidden bg-black/50 mb-2">
-                                <img :src="`/${slot.img}`" @error="handleImageError" class="w-full h-full object-cover">
-                                <span class="absolute top-1 right-1 bg-black/80 text-neon-cyan text-[8px] font-bold px-1.5 rounded">{{ slot.rtp }}</span>
-                            </div>
-                            <h4 class="font-bold text-[10px] truncate">{{ slot.name }}</h4>
-                        </div>
-                    </div>
                 </div>
-
-                <div>
-                    <h3 class="text-xl font-display font-black mb-4 text-neon-yellow">💰 BIG JACKPOTS</h3>
-                    <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x">
-                        <div v-for="slot in slotsData.jackpots" :key="slot.name" class="snap-center flex-shrink-0 w-[140px] glass-panel p-2 rounded-xl border border-white/5 hover:border-neon-yellow/50 transition">
-                            <div class="relative aspect-square rounded-lg overflow-hidden bg-black/50 mb-2">
-                                <img :src="`/${slot.img}`" @error="handleImageError" class="w-full h-full object-cover">
-                                <span class="absolute bottom-0 w-full bg-neon-yellow text-black text-[8px] font-bold text-center py-0.5">HIGH VOLATILITY</span>
-                            </div>
-                            <h4 class="font-bold text-[10px] truncate">{{ slot.name }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div>
                 <h3 class="text-3xl font-display font-black mb-8 flex items-center gap-3">
-                    <span class="text-white">THE</span> <span class="text-neon-cyan">SKILL EDGE</span> <span class="text-sm bg-neon-cyan text-black px-2 py-1 rounded font-bold">PRO GUIDE</span>
+                    <span class="text-white">THE</span> <span class="text-neon-cyan">SKILL EDGE</span>
                 </h3>
-                
                 <div class="grid md:grid-cols-2 gap-6">
                     <div v-for="article in skillArticles" :key="article.title" class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-neon-cyan/30 transition">
                         <div class="text-3xl mb-4">{{ article.icon }}</div>
                         <h4 class="text-lg font-bold text-white mb-3">{{ article.title }}</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light">
-                            {{ article.content }}
-                        </p>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">{{ article.content }}</p>
                     </div>
+                </div>
+            </div>
+
+            <div v-if="mathSlides.length > 0" class="mt-8">
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-purple">CASINO</span> MATHEMATICS
+                </h3>
+                
+                <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 relative min-h-[350px] flex flex-col md:flex-row">
                     
-                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-center items-center text-center">
-                        <div class="w-full h-32 flex items-end justify-center gap-2 mb-4 opacity-80">
-                            <div class="w-4 bg-neon-pink h-[20%]"></div>
-                            <div class="w-4 bg-neon-pink h-[40%]"></div>
-                            <div class="w-4 bg-neon-cyan h-[80%] shadow-[0_0_10px_#00F0FF]"></div>
-                            <div class="w-4 bg-neon-pink h-[40%]"></div>
-                            <div class="w-4 bg-neon-pink h-[20%]"></div>
+                    <div class="w-full md:w-1/3 bg-black/40 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative">
+                         <div v-if="mathSlides[activeMathSlide].visual === 'log-normal'" class="w-full aspect-video border-b border-l border-white/20 relative">
+                             <div class="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-neon-purple/50 to-transparent" style="clip-path: polygon(0 100%, 10% 20%, 30% 80%, 100% 95%, 100% 100%);"></div>
+                             <div class="absolute top-2 right-2 text-[9px] text-gray-400">Probability Density</div>
+                         </div>
+                         <div v-else-if="mathSlides[activeMathSlide].visual === 'formula-ev'" class="text-center">
+                             <div class="text-4xl mb-2">∑</div>
+                             <div class="font-mono text-xs text-neon-yellow">EV = Bonus - (W * HE)</div>
+                         </div>
+                         <div v-else class="text-6xl">📊</div>
+
+                         <div class="mt-4 font-bold text-neon-purple text-sm tracking-widest text-center">{{ mathSlides[activeMathSlide].title }}</div>
+                    </div>
+
+                    <div class="w-full md:w-2/3 p-8 flex flex-col justify-center">
+                        <h4 class="text-xl font-bold text-white mb-1">{{ mathSlides[activeMathSlide].title }}</h4>
+                        <h5 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">{{ mathSlides[activeMathSlide].subtitle }}</h5>
+                        
+                        <p class="text-sm text-gray-300 leading-relaxed border-l-2 border-neon-purple pl-4 mb-6">
+                            {{ mathSlides[activeMathSlide].content }}
+                        </p>
+
+                        <div class="flex items-center gap-4 mt-auto">
+                            <button @click="prevMath" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center transition">←</button>
+                            <span class="text-xs font-mono text-gray-500">{{ activeMathSlide + 1 }} / {{ mathSlides.length }}</span>
+                            <button @click="nextMath" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center transition">→</button>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">Normal Distribution</h4>
-                        <p class="text-xs text-gray-500">Visualizing the Bell Curve of Variance over 10,000 spins.</p>
                     </div>
                 </div>
             </div>
@@ -162,19 +198,7 @@
         </main>
 
         <footer class="mt-auto py-10 px-6 border-t border-white/5 bg-black/40">
-            <div class="max-w-4xl mx-auto flex flex-col items-center gap-6">
-                <div class="flex flex-wrap justify-center gap-6 opacity-60 grayscale hover:grayscale-0 transition duration-500">
-                    <img src="/19.jpeg" class="h-8 rounded">
-                    <a href="https://igamingontario.ca" target="_blank"><img src="/igaming.svg" class="h-8 filter invert"></a>
-                    <a href="https://agco.ca" target="_blank"><img src="/agco.png" class="h-8 filter invert"></a>
-                    <a href="https://connexontario.ca" target="_blank"><img src="/connex.png" class="h-8 filter invert"></a>
-                </div>
-                <p class="text-[10px] text-gray-600 text-center max-w-lg">
-                    Portkey.ca is an independent affiliate. Gambling can be addictive. Please play responsibly. <br>
-                    Call 1-866-531-2600 for help.
-                </p>
-            </div>
-        </footer>
+            </footer>
 
     </div>
     

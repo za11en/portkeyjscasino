@@ -1,4 +1,4 @@
-// --- 1. DAILY DROPS SCHEDULE (For the "Swipe" Feature) ---
+// --- 1. DAILY DROPS SCHEDULE ---
 const WEEKLY_SCHEDULE = [
     {
         day: "Today",
@@ -29,7 +29,7 @@ const WEEKLY_SCHEDULE = [
     }
 ];
 
-// --- 2. EXPANDED SLOTS DB (Categorized) ---
+// --- 2. SLOTS DB ---
 const SLOTS_DATA = {
     trending: [
         { name: "Big Bass Bonanza", provider: "Pragmatic", img: "bigbass.jpeg", rtp: "96.7%", vol: "High" },
@@ -68,34 +68,57 @@ const PAYMENTS_DB = [
     { name: "Apple Pay", type: "Mobile", time: "Instant" }
 ];
 
-// --- 3. EDUCATIONAL CONTENT (Skill Edge) ---
+// --- 3. GENERAL SKILL ARTICLES (Restored to Grid Format) ---
 const SKILL_ARTICLES = [
     {
-        title: "The Law of Large Numbers (LLN)",
+        title: "The Law of Large Numbers",
         icon: "📊",
-        content: "Many players misunderstand 'luck' versus 'probability'. The Law of Large Numbers states that as the number of trials (spins) increases, the actual results will converge on the theoretical expected value (RTP). In a short session of 100 spins, anything can happen—you might be up 500% or down 100%. However, over 1,000,000 spins, if a slot has an RTP of 96%, you will almost certainly have retained exactly 96% of your wagers. This is why the casino always wins in the long run, and why 'hot streaks' are statistically temporary anomalies."
+        content: "In a short session (100 spins), luck dominates. Over 1,000,000 spins, math dominates. The casino doesn't gamble; they invest in the certainty of the Law of Large Numbers."
     },
     {
-        title: "Volatility & Variance Distribution",
+        title: "Volatility & Variance",
         icon: "📈",
-        content: "RTP tells you 'how much' gets paid back, but Volatility tells you 'how' it gets paid. A Low Volatility game (like Starburst) produces a Win Distribution Curve that is tall and narrow—results are clustered tightly around small losses and small wins. A High Volatility game (like Bonanza) has a flat, wide curve with 'fat tails'. This means you are statistically more likely to bust your bankroll quickly, but also significantly more likely to hit a 1000x win. Smart players match volatility to their bankroll: use Low Volatility to clear wagering requirements, and High Volatility for speculative play."
+        content: "Low Volatility = frequent small wins (good for wagering). High Volatility = rare massive wins (good for speculative play). Match the volatility to your bankroll size."
     },
     {
-        title: "Debunking the 'Hot' and 'Cold' Myth",
+        title: "The Gambler's Fallacy",
         icon: "🧊",
-        content: "This is the 'Gambler's Fallacy'. If a slot hasn't paid a jackpot in weeks, it is NOT 'due' to hit. Every spin is an Independent Event determined by a Random Number Generator (RNG) seeding a new result every millisecond. The odds of hitting a jackpot on spin #1 and spin #1,000,000 are identical. Seeing a 'Cold' machine is basically pattern recognition bias; the machine has no memory of previous spins."
+        content: "A machine that hasn't paid in weeks is not 'due'. Every spin is an independent event. The odds of hitting a jackpot on spin #1 and spin #1000 are identical."
     },
     {
-        title: "Understanding Wagering Requirements (EV)",
-        icon: "🧮",
-        content: "To calculate if a bonus is mathematically profitable, you must calculate the Expected Value (EV). Formula: EV = Bonus Amount - (Wager Requirement × House Edge). Example: A $100 bonus with 20x wagering ($2000 total bets) on a 96% RTP slot (4% House Edge). Cost to clear = $2000 × 0.04 = $80. Your EV is $100 - $80 = +$20. If the wagering was 30x, cost to clear is $120, making the EV -$20. Never take a bonus with negative EV unless you are playing purely for entertainment."
-    },
-    {
-        title: "Bankroll Management: The 1% Rule",
+        title: "Bankroll Management",
         icon: "🛡️",
-        content: "Professional players use the 'Risk of Ruin' concept. To have a <1% chance of going bust during a bad variance streak, your bet size should never exceed 1% of your total bankroll. For High Volatility slots, this should be 0.5%. If you have $100, you should be spinning at $0.50 to $1.00 max. Betting $5.00 on a $100 bankroll gives you a nearly 90% statistical probability of hitting $0 before hitting a bonus round."
+        content: "Never bet more than 1% of your bankroll on a single spin. If you have $100, spin at $1. This gives you statistical runway to survive variance."
     }
 ];
 
-module.exports = { WEEKLY_SCHEDULE, SLOTS_DATA, PAYMENTS_DB, SKILL_ARTICLES };
+// --- 4. NEW: MATH & PROBABILITY SLIDES (For the new slider section) ---
+const MATH_SLIDES = [
+    {
+        title: "Win Distribution: The Log-Normal Curve",
+        subtitle: "Why 'Average' Return is a Lie",
+        visual: "log-normal", 
+        content: "The 'Mean' (RTP of 96%) is heavily skewed by rare jackpots. The 'Median' outcome for a typical session is actually a loss. Most players sit in the 'hump' of the curve (losing small amounts), while one lucky player hits the 'long tail' (the jackpot). If you don't hit the tail, your personal RTP is likely closer to 60%."
+    },
+    {
+        title: "Bet Equity (EV) Calculation",
+        subtitle: "Is the Bonus Mathematically Profitable?",
+        visual: "formula-ev",
+        content: "EV = Bonus - (Wager × House Edge). Example: A $100 bonus with 20x wagering ($2000 bets) on a 96% RTP slot (4% Edge). Cost = $2000 × 0.04 = $80. EV = $100 - $80 = +$20. Positive EV means the player has the mathematical advantage."
+    },
+    {
+        title: "Standard Deviation (σ)",
+        subtitle: "Measuring the Swing",
+        visual: "sigma",
+        content: "Standard Deviation measures how wild the swings will be. A slot with high SD (like Megaways) requires 300x your bet size to have a <1% 'Risk of Ruin'. A low SD slot (like Starburst) only requires 100x."
+    },
+    {
+        title: "House Edge Mechanics",
+        subtitle: "The Built-In Tax",
+        visual: "edge",
+        content: "House Edge is 100% - RTP. In Roulette, the '0' creates the edge (2.7%). In Slots, the 'par sheet' weighting determines it. It is an immutable tax on every dollar wagered over infinity."
+    }
+];
+
+module.exports = { WEEKLY_SCHEDULE, SLOTS_DATA, PAYMENTS_DB, SKILL_ARTICLES, MATH_SLIDES };
 

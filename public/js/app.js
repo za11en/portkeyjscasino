@@ -6,8 +6,10 @@ createApp({
             casinos: [], 
             slotsData: {}, 
             payments: [], 
-            weeklySchedule: [], // Initialized as empty array
+            weeklySchedule: [], 
             skillArticles: [],
+            mathSlides: [], // <--- New Data
+            activeMathSlide: 0, // <--- New State
             currentDayIndex: 0, 
             filter: 'all', 
             loading: true, 
@@ -18,7 +20,6 @@ createApp({
     async mounted() {
         try {
             const urlParams = new URLSearchParams(window.location.search);
-            // Use 'api/data' to match your router
             const apiUrl = urlParams.get('dev') ? `/api/data?dev=true` : `/api/data`;
             
             const res = await fetch(apiUrl);
@@ -27,14 +28,12 @@ createApp({
                 this.error = true; 
             } else { 
                 const data = await res.json(); 
-                
-                // --- SAFE ASSIGNMENT ---
-                // We use '|| []' to ensure we never get 'undefined' if data is missing
                 this.casinos = data.casinos || [];
                 this.slotsData = data.slots || {}; 
                 this.payments = data.payments || [];
                 this.weeklySchedule = data.weekly || []; 
                 this.skillArticles = data.articles || [];
+                this.mathSlides = data.math || []; // <--- Load Data
             }
         } catch (e) { 
             console.error("Fetch Error:", e); 
@@ -50,17 +49,22 @@ createApp({
         visibleCasinos() { 
             return this.filteredCasinos.slice(0, this.visibleCount); 
         },
+        referralCasinos() { 
+            if (!this.casinos) return [];
+            return this.casinos.filter(c => c.referral_bonus); 
+        },
         currentDayData() {
-            // --- CRITICAL FIX ---
-            // If weeklySchedule is empty or undefined, return a placeholder to prevent crash
             if (!this.weeklySchedule || this.weeklySchedule.length === 0) {
-                return { 
-                    day: 'Loading...', 
-                    rewards: [] // Empty rewards array prevents v-for crash
-                };
+                return { day: 'Loading...', rewards: [] };
             }
-            // Safely access the index
             return this.weeklySchedule[this.currentDayIndex] || { day: 'Error', rewards: [] };
+        },
+        currentDayLabel() {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = new Date();
+            const targetDate = new Date(today);
+            targetDate.setDate(today.getDate() + this.currentDayIndex);
+            return days[targetDate.getDay()];
         },
         todayName() { 
             return new Date().toLocaleDateString('en-US', { weekday: 'long' }); 
@@ -81,6 +85,21 @@ createApp({
                 this.currentDayIndex--;
             } else {
                 this.currentDayIndex = this.weeklySchedule.length - 1; 
+            }
+        },
+        // --- NEW MATH SLIDER METHODS ---
+        nextMath() {
+            if (this.activeMathSlide < this.mathSlides.length - 1) {
+                this.activeMathSlide++;
+            } else {
+                this.activeMathSlide = 0;
+            }
+        },
+        prevMath() {
+            if (this.activeMathSlide > 0) {
+                this.activeMathSlide--;
+            } else {
+                this.activeMathSlide = this.mathSlides.length - 1;
             }
         },
         handleImageError(e) { 
