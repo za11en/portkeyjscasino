@@ -95,10 +95,10 @@ const CASINO_DB = [
 // --- 2. SLOT GAMES ---
 const SLOTS_DB = [
     { name: "Big Bass Bonanza", provider: "Pragmatic", img: "bigbass.jpeg", rtp: "96.7%" },
-    { name: "Starburst", provider: "NetEnt", img: "https://placehold.co/150x150/2d0036/FFF?text=Starburst", rtp: "96.1%" },
-    { name: "Book of Dead", provider: "Play'n GO", img: "https://placehold.co/150x150/362d00/FFF?text=Book+Dead", rtp: "96.2%" },
-    { name: "Sweet Bonanza", provider: "Pragmatic", img: "https://placehold.co/150x150/36002d/FFF?text=Sweet", rtp: "96.5%" },
-    { name: "Wolf Gold", provider: "Pragmatic", img: "https://placehold.co/150x150/000/FFF?text=Wolf", rtp: "96.0%" }
+    { name: "Starburst", provider: "NetEnt", img: "starburst.jpg", rtp: "96.1%" },
+    { name: "Book of Dead", provider: "Play'n GO", img: "dead.jpeg", rtp: "96.2%" },
+    { name: "Sweet Bonanza", provider: "Pragmatic", img: "sweet.jpg", rtp: "96.5%" },
+    { name: "Wolf Gold", provider: "Pragmatic", img:"wolf.jpeg", rtp: "96.0%" }
 ];
 
 // --- 3. PAYMENTS ---
