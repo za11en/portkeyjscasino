@@ -10,18 +10,19 @@ const PORT = process.env.PORT || 3000;
 
 app.set('trust proxy', 1);
 
-// --- 1. CASINO DATABASE (Updated with Min Dep & Wager) ---
+// --- 1. CASINO DATABASE (VERIFIED LINKS) ---
 const CASINO_DB = [
   { 
       id: "playojo", 
       name: "PlayOJO", 
       logo_file: "playojo.png", 
       affiliate_link: "https://www.playojo.ca", 
-      sign_up_bonus: "50 Free Spins", 
+      sign_up_bonus: "50 FREE SPINS", 
+      bonus_detail: "No Wagering Requirements",
       bonus_type: "no_wager",
-      wagering_req: "0x (None)", 
+      wagering_req: "0x", 
       min_deposit: "$10",
-      metrics: { speed: 0, rtp: 97.0 }, 
+      metrics: { speed: "Instant", rtp: "97.0%" }, 
       hero_badge: "Fair Play" 
   },
   { 
@@ -29,11 +30,12 @@ const CASINO_DB = [
       name: "JackpotCity", 
       logo_file: "jackpotcity.png", 
       affiliate_link: "https://www.jackpotcity.ca", 
-      sign_up_bonus: "$1,600 Pack", 
+      sign_up_bonus: "$1,600 BONUS", 
+      bonus_detail: "Deposit Match Package",
       bonus_type: "match", 
       wagering_req: "70x",
       min_deposit: "$10",
-      metrics: { speed: 48, rtp: 97.8 }, 
+      metrics: { speed: "24h", rtp: "97.8%" }, 
       hero_badge: "High Roller" 
   },
   { 
@@ -41,11 +43,12 @@ const CASINO_DB = [
       name: "BetMGM", 
       logo_file: "betmgm.png", 
       affiliate_link: "https://www.betmgm.com", 
-      sign_up_bonus: "100% up to $3K", 
+      sign_up_bonus: "$3,000 MATCH", 
+      bonus_detail: "+ $100 On The House",
       bonus_type: "match", 
       wagering_req: "15x",
       min_deposit: "$20",
-      metrics: { speed: 24, rtp: 96.1 }, 
+      metrics: { speed: "24h", rtp: "96.1%" }, 
       hero_badge: "Top Pick" 
   },
   { 
@@ -53,11 +56,12 @@ const CASINO_DB = [
       name: "Spin Casino", 
       logo_file: "spin.png", 
       affiliate_link: "https://www.spincasino.ca", 
-      sign_up_bonus: "$1,000 Bonus", 
+      sign_up_bonus: "$1,000 BONUS", 
+      bonus_detail: "Deposit Match",
       bonus_type: "match", 
       wagering_req: "70x",
       min_deposit: "$10",
-      metrics: { speed: 48, rtp: 96.3 }, 
+      metrics: { speed: "48h", rtp: "96.3%" }, 
       hero_badge: "Jackpots" 
   },
   { 
@@ -65,67 +69,45 @@ const CASINO_DB = [
       name: "BetRivers", 
       logo_file: "betrivers.png", 
       affiliate_link: "https://on.betrivers.ca", 
-      sign_up_bonus: "$500 Lossback", 
+      sign_up_bonus: "$500 LOSSBACK", 
+      bonus_detail: "First 24 Hours",
       bonus_type: "lossback", 
       wagering_req: "1x",
       min_deposit: "$10",
-      metrics: { speed: 1, rtp: 95.5 }, 
-      hero_badge: "Instant Pay" 
-  },
-  { 
-      id: "888", 
-      name: "888 Casino", 
-      logo_file: "888.png", 
-      affiliate_link: "https://www.888casino.ca", 
-      sign_up_bonus: "88 Free Spins", 
-      bonus_type: "spins", 
-      wagering_req: "30x",
-      min_deposit: "$20",
-      metrics: { speed: 72, rtp: 96.6 }, 
-      hero_badge: "No Deposit" 
+      metrics: { speed: "1h", rtp: "95.5%" }, 
+      hero_badge: "Fast Pay" 
   },
   { 
       id: "northstar", 
       name: "NorthStar", 
       logo_file: "northstar.png", 
       affiliate_link: "https://www.northstarbets.ca", 
-      sign_up_bonus: "$100 Bet Match", 
+      sign_up_bonus: "$100 BET MATCH", 
+      bonus_detail: "Wager $100 Get $100",
       bonus_type: "match", 
       wagering_req: "20x",
       min_deposit: "$10",
-      metrics: { speed: 24, rtp: 97.1 }, 
+      metrics: { speed: "24h", rtp: "97.1%" }, 
       hero_badge: "Ontario Native" 
-  },
-  { 
-      id: "leovegas", 
-      name: "LeoVegas", 
-      logo_file: "leovegas.png", 
-      affiliate_link: "https://www.leovegas.com", 
-      sign_up_bonus: "$1.5K + 100 Spins", 
-      bonus_type: "match", 
-      wagering_req: "20x",
-      min_deposit: "$10",
-      metrics: { speed: 24, rtp: 96.5 }, 
-      hero_badge: "Mobile King" 
   }
 ];
 
-// --- 2. SLOT GAMES DATABASE ---
+// --- 2. SLOT GAMES ---
 const SLOTS_DB = [
-    { name: "Big Bass Bonanza", provider: "Pragmatic Play", img: "bigbass.jpg", rtp: "96.7%" },
-    { name: "Starburst", provider: "NetEnt", img: "starburst.jpg", rtp: "96.1%" },
-    { name: "Book of Dead", provider: "Play'n GO", img: "bookofdead.jpg", rtp: "96.2%" },
-    { name: "Sweet Bonanza", provider: "Pragmatic Play", img: "sweetbonanza.jpg", rtp: "96.5%" },
-    { name: "Wolf Gold", provider: "Pragmatic Play", img: "wolfgold.jpg", rtp: "96.0%" },
-    { name: "9 Masks of Fire", provider: "Microgaming", img: "9masks.jpg", rtp: "96.2%" }
+    { name: "Big Bass Bonanza", provider: "Pragmatic", img: "https://placehold.co/150x150/000/FFF?text=Big+Bass", rtp: "96.7%" },
+    { name: "Starburst", provider: "NetEnt", img: "https://placehold.co/150x150/2d0036/FFF?text=Starburst", rtp: "96.1%" },
+    { name: "Book of Dead", provider: "Play'n GO", img: "https://placehold.co/150x150/362d00/FFF?text=Book+Dead", rtp: "96.2%" },
+    { name: "Sweet Bonanza", provider: "Pragmatic", img: "https://placehold.co/150x150/36002d/FFF?text=Sweet", rtp: "96.5%" },
+    { name: "Wolf Gold", provider: "Pragmatic", img: "https://placehold.co/150x150/000/FFF?text=Wolf", rtp: "96.0%" }
 ];
 
-// --- 3. PAYMENT METHODS DATABASE ---
+// --- 3. PAYMENTS ---
 const PAYMENTS_DB = [
-    { name: "Interac", type: "Debit", time: "Instant", icon: "interac-logo.png" },
-    { name: "Visa / MC", type: "Credit", time: "Instant", icon: "visa-logo.png" },
-    { name: "PayPal", type: "E-Wallet", time: "1-24 Hours", icon: "paypal-logo.png" },
-    { name: "Apple Pay", type: "Mobile", time: "Instant", icon: "applepay-logo.png" }
+    { name: "Interac", type: "Debit", time: "Instant" },
+    { name: "Visa", type: "Card", time: "Instant" },
+    { name: "MasterCard", type: "Card", time: "Instant" },
+    { name: "PayPal", type: "E-Wallet", time: "24h" },
+    { name: "Apple Pay", type: "Mobile", time: "Instant" }
 ];
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -140,9 +122,7 @@ app.use(helmet.contentSecurityPolicy({
     },
 }));
 
-// --- API ENDPOINTS ---
-
-// Check Region
+// --- API ---
 const checkOntarioAPI = (req, res, next) => {
     if (req.query.dev === 'true' || req.headers.referer?.includes('dev=true')) return next();
     const vercelRegion = req.headers['x-vercel-ip-country-region'];
@@ -156,7 +136,6 @@ const checkOntarioAPI = (req, res, next) => {
     next();
 };
 
-// Unified Data Endpoint
 app.get('/api/data', checkOntarioAPI, (req, res) => {
     res.json({
         casinos: CASINO_DB,
@@ -165,9 +144,14 @@ app.get('/api/data', checkOntarioAPI, (req, res) => {
     });
 });
 
+// --- LINK REDIRECTION ---
 app.get('/go/:id', (req, res) => {
     const target = CASINO_DB.find(c => c.id === req.params.id);
-    target ? res.redirect(target.affiliate_link) : res.redirect('/');
+    if (target) {
+        res.redirect(target.affiliate_link);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.listen(PORT, () => {
