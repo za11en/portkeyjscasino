@@ -80,7 +80,7 @@ const CASINO_DB = [
   { 
       id: "northstar", 
       name: "NorthStar", 
-      logo_file: "northstar.png", 
+      logo_file: "northstar.jpg", 
       affiliate_link: "https://www.northstarbets.ca", 
       sign_up_bonus: "$100 BET MATCH", 
       bonus_detail: "Wager $100 Get $100",
@@ -94,7 +94,7 @@ const CASINO_DB = [
 
 // --- 2. SLOT GAMES ---
 const SLOTS_DB = [
-    { name: "Big Bass Bonanza", provider: "Pragmatic", img: "https://placehold.co/150x150/000/FFF?text=Big+Bass", rtp: "96.7%" },
+    { name: "Big Bass Bonanza", provider: "Pragmatic", img: "bigbass jpeg", rtp: "96.7%" },
     { name: "Starburst", provider: "NetEnt", img: "https://placehold.co/150x150/2d0036/FFF?text=Starburst", rtp: "96.1%" },
     { name: "Book of Dead", provider: "Play'n GO", img: "https://placehold.co/150x150/362d00/FFF?text=Book+Dead", rtp: "96.2%" },
     { name: "Sweet Bonanza", provider: "Pragmatic", img: "https://placehold.co/150x150/36002d/FFF?text=Sweet", rtp: "96.5%" },
