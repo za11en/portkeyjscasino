@@ -71,7 +71,23 @@
             </div>
         </header>
 
-        <div class="px-4 py-10 text-center">
+        <section v-if="dailyRewardCasinos.length > 0" class="mt-8 px-4 max-w-6xl mx-auto">
+            <h2 class="text-xl font-display font-bold mb-4 flex items-center gap-2">
+                <span class="text-neon-cyan">TODAY'S</span> FREE REWARDS ({{ todayName }})
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div v-for="c in dailyRewardCasinos" :key="c.id" class="glass-panel p-3 rounded-xl flex flex-col items-center text-center hover:bg-white/5 transition">
+                    <div class="h-8 mb-2 flex items-center justify-center">
+                        <img :src="`/${c.logo_file}`" class="max-h-full max-w-[80px] object-contain">
+                    </div>
+                    <div class="text-[10px] font-bold text-neon-yellow uppercase tracking-wider mb-1">FREE DAILY</div>
+                    <div class="text-xs font-medium text-gray-300 leading-tight">{{ c.daily_reward }}</div>
+                    <a :href="'/go/' + c.id" target="_blank" class="mt-2 w-full py-1 bg-white/10 hover:bg-neon-cyan hover:text-black rounded text-[9px] font-bold uppercase transition">Claim</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="px-4 py-8 text-center">
             <h1 class="text-3xl md:text-5xl font-display font-black mb-4 leading-tight">
                 ONTARIO'S <span class="text-neon-yellow">TOP 40</span>
             </h1>
@@ -84,17 +100,23 @@
             </div>
         </div>
 
-        <main class="max-w-5xl mx-auto w-full px-4 pb-12 space-y-16">
+        <main class="max-w-6xl mx-auto w-full px-4 pb-12 space-y-16">
             
             <div>
                 <div v-if="loading" class="text-center py-12"><div class="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mx-auto"></div></div>
                 
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div v-for="casino in visibleCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300">
+                    <div v-for="casino in visibleCasinos" :key="casino.id" class="glass-panel rounded-3xl p-5 relative group hover:border-neon-purple/50 transition duration-300 flex flex-col">
                         <div v-if="casino.hero_badge" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon-cyan text-dark text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(0,240,255,0.4)] z-20">
                             {{ casino.hero_badge }}
                         </div>
-                        <div class="text-center mt-3">
+                        
+                        <div class="absolute top-4 right-4 flex flex-col gap-1 items-end">
+                            <span v-if="casino.daily_reward" class="bg-neon-pink/20 text-neon-pink border border-neon-pink/30 text-[8px] font-bold px-2 py-0.5 rounded uppercase">Daily Drop</span>
+                            <span v-if="casino.referral_bonus" class="bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/30 text-[8px] font-bold px-2 py-0.5 rounded uppercase">Referral</span>
+                        </div>
+
+                        <div class="text-center mt-3 flex-grow">
                             <div class="h-16 mb-4 flex items-center justify-center">
                                 <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg" :alt="casino.name">
                             </div>
@@ -113,7 +135,13 @@
                                     Speed: <span class="text-white">{{ casino.metrics.speed }}</span>
                                 </div>
                             </div>
-                            <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider">VISIT SITE</a>
+                            
+                            <div v-if="casino.daily_reward || casino.referral_bonus" class="mb-5 text-[10px] bg-black/20 p-2 rounded-lg text-left space-y-1 border border-white/5">
+                                <div v-if="casino.daily_reward" class="flex justify-between"><span class="text-gray-400">Daily:</span> <span class="text-white font-bold">{{ casino.daily_reward }}</span></div>
+                                <div v-if="casino.referral_bonus" class="flex justify-between"><span class="text-gray-400">Refer:</span> <span class="text-white font-bold">{{ casino.referral_bonus }}</span></div>
+                            </div>
+
+                            <a :href="'/go/' + casino.id" target="_blank" class="block w-full py-3.5 rounded-xl btn-action font-black text-sm uppercase tracking-wider mt-auto">VISIT SITE</a>
                             <p class="text-[9px] text-gray-500 mt-3">T&Cs Apply. 19+. Ontario Only.</p>
                         </div>
                     </div>
@@ -126,17 +154,62 @@
                 </div>
             </div>
 
-            <div>
-                <h3 class="text-xl font-display font-bold mb-4 flex items-center gap-2"><span class="text-neon-pink">HOT</span> SLOTS</h3>
-                <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-                    <div v-for="slot in slots" :key="slot.name" class="min-w-[140px] glass-panel rounded-xl p-3 hover:bg-white/5 cursor-pointer transition">
-                        <div class="w-full h-24 bg-black/40 rounded-lg mb-2 overflow-hidden relative">
-                             <img :src="slot.img" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition">
-                             <div class="absolute top-1 right-1 bg-neon-yellow text-black text-[9px] font-bold px-1 rounded-sm">RTP {{ slot.rtp }}</div>
-                        </div>
-                        <p class="font-bold text-xs truncate">{{ slot.name }}</p>
-                        <p class="text-[9px] text-gray-500">{{ slot.provider }}</p>
+            <div v-if="referralCasinos.length > 0">
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-pink">REFER</span> & EARN
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div v-for="c in referralCasinos" :key="c.id" class="glass-panel rounded-xl p-4 flex items-center gap-4 border-l-4 border-l-neon-pink">
+                         <div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-full flex items-center justify-center p-2">
+                            <img :src="`/${c.logo_file}`" class="max-w-full max-h-full object-contain">
+                         </div>
+                         <div>
+                             <h4 class="font-bold text-sm">{{ c.name }}</h4>
+                             <p class="text-xs text-neon-yellow font-bold">{{ c.referral_bonus }}</p>
+                             <a :href="'/go/' + c.id" class="text-[10px] text-gray-400 underline hover:text-white mt-1 block">Get Link</a>
+                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-display font-black mb-6 flex items-center gap-2">
+                    <span class="text-neon-yellow">LOYALTY</span> & REWARDS MATRIX
+                </h3>
+                <div class="glass-panel rounded-2xl overflow-hidden overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white/5 uppercase text-[10px] font-bold tracking-wider text-gray-400">
+                            <tr>
+                                <th class="px-6 py-4">Casino</th>
+                                <th class="px-6 py-4">Daily Bonus?</th>
+                                <th class="px-6 py-4">Refer-a-Friend</th>
+                                <th class="px-6 py-4">Loyalty Program</th>
+                                <th class="px-6 py-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            <tr v-for="c in casinos.filter(x => x.daily_reward || x.referral_bonus || x.loyalty_tier).slice(0, 10)" :key="c.id + '_chart'" class="hover:bg-white/5 transition">
+                                <td class="px-6 py-4 font-bold flex items-center gap-3">
+                                    <img :src="`/${c.logo_file}`" class="w-6 h-6 object-contain"> {{ c.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span v-if="c.daily_reward" class="text-neon-cyan text-xs">✔ {{ c.daily_reward }}</span>
+                                    <span v-else class="text-gray-600">-</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span v-if="c.referral_bonus" class="text-neon-pink text-xs">✔ {{ c.referral_bonus }}</span>
+                                    <span v-else class="text-gray-600">-</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span v-if="c.loyalty_tier" class="text-neon-yellow text-xs">★ {{ c.loyalty_tier }}</span>
+                                    <span v-else class="text-gray-600">-</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a :href="'/go/' + c.id" class="text-xs font-bold text-white hover:text-neon-cyan underline">VISIT</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -149,25 +222,21 @@
                         <div class="text-neon-pink text-xl mb-3">⚡</div>
                         <h4 class="font-bold text-sm mb-2">Volatility vs. RTP</h4>
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong>RTP (Return to Player)</strong> is the theoretical long-term payout (e.g., 96%). 
-                            <strong>Volatility</strong> is the risk. High volatility games pay out less often but in larger amounts. 
-                            Low volatility pays smaller amounts frequently. Choose based on your bankroll style.
+                            <strong>RTP (Return to Player)</strong> is the theoretical long-term payout. High volatility pays less often but bigger.
                         </p>
                     </div>
                     <div class="bg-black/30 p-5 rounded-xl border border-white/5">
                         <div class="text-neon-yellow text-xl mb-3">🔄</div>
                         <h4 class="font-bold text-sm mb-2">The Wagering Math</h4>
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            A $100 bonus with <strong>30x wagering</strong> means you must bet $3,000 ($100 x 30) before withdrawing winnings. 
-                            Always check if wagering applies to just the bonus or (Deposit + Bonus), which doubles the requirement.
+                            A 30x wagering req on $100 means betting $3,000 before withdrawing. Always check T&Cs.
                         </p>
                     </div>
                     <div class="bg-black/30 p-5 rounded-xl border border-white/5">
                         <div class="text-neon-cyan text-xl mb-3">🛡️</div>
                         <h4 class="font-bold text-sm mb-2">Smart Bankroll</h4>
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            Never bet more than 1-2% of your total bankroll on a single spin. 
-                            If you have $100, stick to $1 or $0.50 spins. This gives you enough variance to hit a bonus round.
+                            Never bet more than 1-2% of your bankroll on a single spin to handle variance.
                         </p>
                     </div>
                 </div>
@@ -218,7 +287,10 @@
             },
             computed: { 
                 filteredCasinos() { return this.filter === 'all' ? this.casinos : this.casinos.filter(c => c.bonus_type === this.filter); },
-                visibleCasinos() { return this.filteredCasinos.slice(0, this.visibleCount); }
+                visibleCasinos() { return this.filteredCasinos.slice(0, this.visibleCount); },
+                dailyRewardCasinos() { return this.casinos.filter(c => c.daily_reward); },
+                referralCasinos() { return this.casinos.filter(c => c.referral_bonus); },
+                todayName() { return new Date().toLocaleDateString('en-US', { weekday: 'long' }); }
             },
             methods: {
                 confirmAge() { this.ageVerified = true; localStorage.setItem('portkey_age_verified', 'true'); },

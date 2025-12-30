@@ -1,3 +1,4 @@
+
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
@@ -10,32 +11,81 @@ const PORT = process.env.PORT || 3000;
 
 app.set('trust proxy', 1);
 
-// --- 1. THE "ONTARIO 40" DATABASE (2025 VERIFIED) ---
+// --- 1. THE "ONTARIO 40" DATABASE (UPDATED) ---
 const CASINO_DB = [
   // --- TIER 1: THE GIANTS ---
-  { id: "playojo", name: "PlayOJO", logo_file: "playojo.png", affiliate_link: "https://www.playojo.ca", sign_up_bonus: "50 FREE SPINS", bonus_detail: "No Wagering Ever", bonus_type: "no_wager", wagering_req: "0x", min_deposit: "$10", metrics: { speed: "Instant", rtp: "97.0%" }, hero_badge: "Fair Play" },
-  { id: "betrivers", name: "BetRivers", logo_file: "betrivers.svg", affiliate_link: "https://on.betrivers.ca", sign_up_bonus: "$500 LOSSBACK", bonus_detail: "1x Wager Req", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "1h", rtp: "95.5%" }, hero_badge: "Best Value" },
-  { id: "betmgm", name: "BetMGM", logo_file: "betmgm.png", affiliate_link: "https://www.betmgm.com", sign_up_bonus: "$3,000 MATCH", bonus_detail: "+ $100 Free", bonus_type: "match", wagering_req: "15x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.1%" }, hero_badge: "Top Pick" },
-  { id: "jackpotcity", name: "JackpotCity", logo_file: "jackpotcity.png", affiliate_link: "https://www.jackpotcity.ca", sign_up_bonus: "$1,600 PACK", bonus_detail: "Daily Wheel Spins", bonus_type: "match", wagering_req: "70x", min_deposit: "$10", metrics: { speed: "24h", rtp: "97.8%" }, hero_badge: "High Roller" },
-  { id: "draftkings", name: "DraftKings", logo_file: "draftkings.png", affiliate_link: "https://casino.draftkings.com", sign_up_bonus: "PLAY $1 GET $100", bonus_detail: "Casino Credits", bonus_type: "no_wager", wagering_req: "1x", min_deposit: "$5", metrics: { speed: "Instant", rtp: "96.0%" }, hero_badge: "Low Dep" },
+  { 
+    id: "playojo", name: "PlayOJO", logo_file: "playojo.png", affiliate_link: "https://www.playojo.ca", 
+    sign_up_bonus: "50 FREE SPINS", bonus_detail: "No Wagering Ever", bonus_type: "no_wager", wagering_req: "0x", min_deposit: "$10", 
+    metrics: { speed: "Instant", rtp: "97.0%" }, hero_badge: "Fair Play",
+    daily_reward: "Kickers (Daily Mystery)", referral_bonus: null, loyalty_tier: "OJOplus (Cash back on every bet)"
+  },
+  { 
+    id: "betrivers", name: "BetRivers", logo_file: "betrivers.svg", affiliate_link: "https://on.betrivers.ca", 
+    sign_up_bonus: "$500 LOSSBACK", bonus_detail: "1x Wager Req", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", 
+    metrics: { speed: "1h", rtp: "95.5%" }, hero_badge: "Best Value",
+    daily_reward: "Daily Rush Race", referral_bonus: "$50 For You, $50 For Them", loyalty_tier: "iRush Rewards"
+  },
+  { 
+    id: "betmgm", name: "BetMGM", logo_file: "betmgm.png", affiliate_link: "https://www.betmgm.com", 
+    sign_up_bonus: "$3,000 MATCH", bonus_detail: "+ $100 Free", bonus_type: "match", wagering_req: "15x", min_deposit: "$20", 
+    metrics: { speed: "24h", rtp: "96.1%" }, hero_badge: "Top Pick",
+    daily_reward: "Lion's Share Daily Drop", referral_bonus: "$100 Refer-a-Friend", loyalty_tier: "MGM Rewards (Vegas Comps)"
+  },
+  { 
+    id: "jackpotcity", name: "JackpotCity", logo_file: "jackpotcity.png", affiliate_link: "https://www.jackpotcity.ca", 
+    sign_up_bonus: "$1,600 PACK", bonus_detail: "Daily Wheel Spins", bonus_type: "match", wagering_req: "70x", min_deposit: "$10", 
+    metrics: { speed: "24h", rtp: "97.8%" }, hero_badge: "High Roller",
+    daily_reward: "Bonus Wheel Spin", referral_bonus: null, loyalty_tier: "Loyalty Points System"
+  },
+  { 
+    id: "draftkings", name: "DraftKings", logo_file: "draftkings.png", affiliate_link: "https://casino.draftkings.com", 
+    sign_up_bonus: "PLAY $1 GET $100", bonus_detail: "Casino Credits", bonus_type: "no_wager", wagering_req: "1x", min_deposit: "$5", 
+    metrics: { speed: "Instant", rtp: "96.0%" }, hero_badge: "Low Dep",
+    daily_reward: "Daily Missions", referral_bonus: "$100 Casino Credits", loyalty_tier: "Dynasty Rewards"
+  },
   
   // --- TIER 2: LOCAL FAVORITES ---
-  { id: "northstar", name: "NorthStar", logo_file: "northstar.png", affiliate_link: "https://www.northstarbets.ca", sign_up_bonus: "$100 BET MATCH", bonus_detail: "Ontario Exclusive", bonus_type: "match", wagering_req: "20x", min_deposit: "$10", metrics: { speed: "24h", rtp: "97.1%" }, hero_badge: "Local" },
-  { id: "thescore", name: "theScore Bet", logo_file: "score.png", affiliate_link: "https://thescore.bet", sign_up_bonus: "BET $10 GET $100", bonus_detail: "Bonus Bets", bonus_type: "spins", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "12h", rtp: "95.8%" }, hero_badge: "Best App" },
-  { id: "caesars", name: "Caesars", logo_file: "caesars.png", affiliate_link: "https://www.caesarspalaceonline.com", sign_up_bonus: "$1,000 MATCH", bonus_detail: "+ $10 Sign Up", bonus_type: "match", wagering_req: "15x", min_deposit: "$10", metrics: { speed: "12h", rtp: "95.8%" }, hero_badge: "Vegas" },
-  { id: "leovegas", name: "LeoVegas", logo_file: "leo.png", affiliate_link: "https://www.leovegas.com", sign_up_bonus: "$1,500 + 100 SPINS", bonus_detail: "Cash Reload", bonus_type: "match", wagering_req: "20x", min_deposit: "$10", metrics: { speed: "24h", rtp: "96.5%" }, hero_badge: "Mobile" },
-  { id: "888", name: "888 Casino", logo_file: "888.svg", affiliate_link: "https://www.888casino.ca", sign_up_bonus: "88 FREE SPINS", bonus_detail: "No Deposit Req", bonus_type: "spins", wagering_req: "30x", min_deposit: "$20", metrics: { speed: "48h", rtp: "96.6%" }, hero_badge: "Free" },
+  { 
+    id: "northstar", name: "NorthStar", logo_file: "northstar.png", affiliate_link: "https://www.northstarbets.ca", 
+    sign_up_bonus: "$100 BET MATCH", bonus_detail: "Ontario Exclusive", bonus_type: "match", wagering_req: "20x", min_deposit: "$10", 
+    metrics: { speed: "24h", rtp: "97.1%" }, hero_badge: "Local",
+    daily_reward: "Daily Bet Boosts", referral_bonus: null, loyalty_tier: "VIP Status"
+  },
+  { 
+    id: "thescore", name: "theScore Bet", logo_file: "score.png", affiliate_link: "https://thescore.bet", 
+    sign_up_bonus: "BET $10 GET $100", bonus_detail: "Bonus Bets", bonus_type: "spins", wagering_req: "1x", min_deposit: "$10", 
+    metrics: { speed: "12h", rtp: "95.8%" }, hero_badge: "Best App",
+    daily_reward: "Daily Parlay Boosts", referral_bonus: "$50 Bonus Bet", loyalty_tier: null
+  },
+  { 
+    id: "caesars", name: "Caesars", logo_file: "caesars.png", affiliate_link: "https://www.caesarspalaceonline.com", 
+    sign_up_bonus: "$1,000 MATCH", bonus_detail: "+ $10 Sign Up", bonus_type: "match", wagering_req: "15x", min_deposit: "$10", 
+    metrics: { speed: "12h", rtp: "95.8%" }, hero_badge: "Vegas",
+    daily_reward: "Daily Mystery Bonus", referral_bonus: "5,000 Reward Credits", loyalty_tier: "Caesars Rewards"
+  },
+  { 
+    id: "leovegas", name: "LeoVegas", logo_file: "leo.png", affiliate_link: "https://www.leovegas.com", 
+    sign_up_bonus: "$1,500 + 100 SPINS", bonus_detail: "Cash Reload", bonus_type: "match", wagering_req: "20x", min_deposit: "$10", 
+    metrics: { speed: "24h", rtp: "96.5%" }, hero_badge: "Mobile",
+    daily_reward: "Lunchtime Free Spins", referral_bonus: null, loyalty_tier: "LeoVegas VIP"
+  },
+  { 
+    id: "888", name: "888 Casino", logo_file: "888.svg", affiliate_link: "https://www.888casino.ca", 
+    sign_up_bonus: "88 FREE SPINS", bonus_detail: "No Deposit Req", bonus_type: "spins", wagering_req: "30x", min_deposit: "$20", 
+    metrics: { speed: "48h", rtp: "96.6%" }, hero_badge: "Free",
+    daily_reward: "The Daily Wish", referral_bonus: null, loyalty_tier: "888 VIP Club"
+  },
 
-  // --- TIER 3: SLOT SPECIALISTS ---
-  { id: "spin-casino", name: "Spin Casino", logo_file: "spin.png", affiliate_link: "https://www.spincasino.ca", sign_up_bonus: "$1,000 MATCH", bonus_detail: "Slots Focus", bonus_type: "match", wagering_req: "70x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.3%" }, hero_badge: "Jackpots" },
-  { id: "royal-panda", name: "Royal Panda", logo_file: "royalpanda.png", affiliate_link: "https://www.royalpanda.com", sign_up_bonus: "$1,000 MATCH", bonus_detail: "100% Reload", bonus_type: "match", wagering_req: "35x", min_deposit: "$10", metrics: { speed: "24h", rtp: "96.2%" }, hero_badge: "Reliable" },
-  { id: "casumo", name: "Casumo", logo_file: "casumo.png", affiliate_link: "https://www.casumo.com", sign_up_bonus: "$500 + 75 SPINS", bonus_detail: "9 Masks of Fire", bonus_type: "match", wagering_req: "30x", min_deposit: "$10", metrics: { speed: "24h", rtp: "97.2%" }, hero_badge: "Fun" },
-  { id: "party", name: "PartyCasino", logo_file: "party.png", affiliate_link: "https://casino.partycasino.com", sign_up_bonus: "$2,000 + 275 SPINS", bonus_detail: "Huge Package", bonus_type: "match", wagering_req: "30x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" }, hero_badge: "Big Bonus" },
-  { id: "pokerstars", name: "PokerStars", logo_file: "pokerstars.png", affiliate_link: "https://www.pokerstars.ca", sign_up_bonus: "$600 MATCH", bonus_detail: "Poker Integrated", bonus_type: "match", wagering_req: "50x", min_deposit: "$10", metrics: { speed: "24h", rtp: "96.0%" }, hero_badge: "Poker" },
-
-  // --- TIER 4: THE EXPANDED LIST (30-40) ---
-  { id: "fanduel", name: "FanDuel", logo_file: "fanduel.png", affiliate_link: "https://canada.casino.fanduel.com", sign_up_bonus: "$2,000 LOSSBACK", bonus_detail: "Refund in Credits", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "12h", rtp: "96.2%" } },
-  { id: "pointsbet", name: "PointsBet", logo_file: "pointsbet.png", affiliate_link: "https://on.pointsbet.ca", sign_up_bonus: "$1,000 LOSSBACK", bonus_detail: "Free Bets", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "12h", rtp: "95.0%" } },
+  // --- TIER 3 & 4 (Selected Updates for brevity, rest keep defaults) ---
+  { id: "spin-casino", name: "Spin Casino", logo_file: "spin.png", affiliate_link: "https://www.spincasino.ca", sign_up_bonus: "$1,000 MATCH", bonus_detail: "Slots Focus", bonus_type: "match", wagering_req: "70x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.3%" }, daily_reward: "Bonus Wheel", referral_bonus: null, loyalty_tier: "Loyalty Points" },
+  { id: "royal-panda", name: "Royal Panda", logo_file: "royalpanda.png", affiliate_link: "https://www.royalpanda.com", sign_up_bonus: "$1,000 MATCH", bonus_detail: "100% Reload", bonus_type: "match", wagering_req: "35x", min_deposit: "$10", metrics: { speed: "24h", rtp: "96.2%" }, daily_reward: null, referral_bonus: null, loyalty_tier: "Loyalty Club" },
+  { id: "casumo", name: "Casumo", logo_file: "casumo.png", affiliate_link: "https://www.casumo.com", sign_up_bonus: "$500 + 75 SPINS", bonus_detail: "9 Masks of Fire", bonus_type: "match", wagering_req: "30x", min_deposit: "$10", metrics: { speed: "24h", rtp: "97.2%" }, daily_reward: "Reel Races (Tournaments)", referral_bonus: null, loyalty_tier: "The Adventure" },
+  { id: "party", name: "PartyCasino", logo_file: "party.png", affiliate_link: "https://casino.partycasino.com", sign_up_bonus: "$2,000 + 275 SPINS", bonus_detail: "Huge Package", bonus_type: "match", wagering_req: "30x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" }, daily_reward: "Slot Tournaments", referral_bonus: null, loyalty_tier: "Cashback" },
+  { id: "fanduel", name: "FanDuel", logo_file: "fanduel.png", affiliate_link: "https://canada.casino.fanduel.com", sign_up_bonus: "$2,000 LOSSBACK", bonus_detail: "Refund in Credits", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "12h", rtp: "96.2%" }, daily_reward: "Reward Machine (3 Free Spins)", referral_bonus: "$50 Bonus Each", loyalty_tier: "Players Club" },
+  
+  // Standard entries below (filling gaps with nulls for consistency if needed, but JS handles undefined fine)
+  { id: "pointsbet", name: "PointsBet", logo_file: "pointsbet.png", affiliate_link: "https://on.pointsbet.ca", sign_up_bonus: "$1,000 LOSSBACK", bonus_detail: "Free Bets", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "12h", rtp: "95.0%" }, daily_reward: "Power Hour", referral_bonus: "$100 Free Bet", loyalty_tier: "Rewards" },
   { id: "betway", name: "Betway", logo_file: "betway.png", affiliate_link: "https://betway.ca", sign_up_bonus: "$200 MATCH", bonus_detail: "Established Brand", bonus_type: "match", wagering_req: "50x", min_deposit: "$10", metrics: { speed: "48h", rtp: "95.8%" } },
   { id: "comeon", name: "ComeOn!", logo_file: "comeon.png", affiliate_link: "https://www.comeon.com", sign_up_bonus: "150% MATCH", bonus_detail: "Up to $1500", bonus_type: "match", wagering_req: "35x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.0%" } },
   { id: "casino-days", name: "Casino Days", logo_file: "casinodays.png", affiliate_link: "https://casinodays.com", sign_up_bonus: "$1,000 + 100 SPINS", bonus_detail: "Book of Dead", bonus_type: "match", wagering_req: "35x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.8%" } },
@@ -134,4 +184,3 @@ app.get('/go/:id', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
 });
-
