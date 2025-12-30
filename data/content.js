@@ -1,4 +1,4 @@
-// --- 1. DAILY DROPS SCHEDULE ---
+// --- 1. WEEKLY SCHEDULE ---
 const WEEKLY_SCHEDULE = [
     {
         day: "Today",
@@ -29,34 +29,49 @@ const WEEKLY_SCHEDULE = [
     }
 ];
 
-// --- 2. SLOTS DB ---
+// --- 2. EXPANDED SLOTS DB ---
 const SLOTS_DATA = {
     trending: [
         { name: "Big Bass Bonanza", provider: "Pragmatic", img: "bigbass.jpeg", rtp: "96.7%", vol: "High" },
         { name: "Starburst", provider: "NetEnt", img: "starburst.jpeg", rtp: "96.1%", vol: "Low" },
         { name: "Book of Dead", provider: "Play'n GO", img: "dead.jpeg", rtp: "96.2%", vol: "High" },
         { name: "Sweet Bonanza", provider: "Pragmatic", img: "sweet.jpeg", rtp: "96.5%", vol: "Med" },
-        { name: "Wolf Gold", provider: "Pragmatic", img: "wolf.jpeg", rtp: "96.0%", vol: "Med" },
-        { name: "9 Masks of Fire", provider: "Microgaming", img: "masks.jpeg", rtp: "96.2%", vol: "Med" },
-        { name: "Cleopatra", provider: "IGT", img: "cleopatra.jpeg", rtp: "95.0%", vol: "Med" }
+        { name: "Wolf Gold", provider: "Pragmatic", img: "wolf.jpeg", rtp: "96.0%", vol: "Med" }
     ],
     high_rtp: [
         { name: "Blood Suckers", provider: "NetEnt", img: "blood.jpeg", rtp: "98.0%", vol: "Low" },
         { name: "White Rabbit", provider: "Big Time", img: "rabbit.jpeg", rtp: "97.7%", vol: "High" },
         { name: "Medusa Megaways", provider: "NextGen", img: "medusa.jpeg", rtp: "97.6%", vol: "High" },
         { name: "Guns N' Roses", provider: "NetEnt", img: "gnr.jpeg", rtp: "96.9%", vol: "Low" },
-        { name: "Dead or Alive 2", provider: "NetEnt", img: "doa2.jpeg", rtp: "96.8%", vol: "High" },
-        { name: "Immortal Romance", provider: "Microgaming", img: "immortal.jpeg", rtp: "96.8%", vol: "High" },
-        { name: "Thunderstruck II", provider: "Microgaming", img: "thunder.jpeg", rtp: "96.6%", vol: "Med" }
+        { name: "Dead or Alive 2", provider: "NetEnt", img: "doa2.jpeg", rtp: "96.8%", vol: "High" }
     ],
     jackpots: [
         { name: "Mega Moolah", provider: "Microgaming", img: "moolah.jpeg", rtp: "88.1%", vol: "High" },
         { name: "Divine Fortune", provider: "NetEnt", img: "divine.jpeg", rtp: "96.6%", vol: "Med" },
         { name: "Age of the Gods", provider: "Playtech", img: "gods.jpeg", rtp: "95.0%", vol: "High" },
         { name: "Jackpot Giant", provider: "Playtech", img: "giant.jpeg", rtp: "94.2%", vol: "Med" },
-        { name: "Hall of Gods", provider: "NetEnt", img: "hall.jpeg", rtp: "95.5%", vol: "Low" },
-        { name: "Major Millions", provider: "Microgaming", img: "major.jpeg", rtp: "89.3%", vol: "High" },
-        { name: "Wheel of Wishes", provider: "Alchemy", img: "wishes.jpeg", rtp: "93.3%", vol: "Low" }
+        { name: "Hall of Gods", provider: "NetEnt", img: "hall.jpeg", rtp: "95.5%", vol: "Low" }
+    ],
+    megaways: [
+        { name: "Bonanza Megaways", provider: "Big Time", img: "bonanza.jpeg", rtp: "96.0%", vol: "High" },
+        { name: "Gonzo's Quest MW", provider: "Red Tiger", img: "gonzomw.jpeg", rtp: "96.0%", vol: "High" },
+        { name: "Ted Megaways", provider: "Blueprint", img: "tedmw.jpeg", rtp: "96.0%", vol: "High" },
+        { name: "Great Rhino MW", provider: "Pragmatic", img: "rhinomw.jpeg", rtp: "96.5%", vol: "High" },
+        { name: "Monopoly MW", provider: "Big Time", img: "monopolymw.jpeg", rtp: "96.5%", vol: "High" }
+    ],
+    hold_win: [
+        { name: "Money Train 2", provider: "Relax", img: "moneytrain2.jpeg", rtp: "96.4%", vol: "High" },
+        { name: "Buffalo Power", provider: "Playson", img: "buffalo.jpeg", rtp: "95.0%", vol: "Med" },
+        { name: "Gold Digger", provider: "iSoftBet", img: "golddigger.jpeg", rtp: "96.0%", vol: "Med" },
+        { name: "Divine Links", provider: "Blueprint", img: "divinelinks.jpeg", rtp: "96.0%", vol: "Med" },
+        { name: "Apollo Pays", provider: "Big Time", img: "apollo.jpeg", rtp: "96.6%", vol: "High" }
+    ],
+    classics: [
+        { name: "Fire Joker", provider: "Play'n GO", img: "firejoker.jpeg", rtp: "96.0%", vol: "Med" },
+        { name: "Break da Bank", provider: "Microgaming", img: "breakbank.jpeg", rtp: "95.7%", vol: "High" },
+        { name: "Mega Joker", provider: "NetEnt", img: "megajoker.jpeg", rtp: "99.0%", vol: "High" },
+        { name: "Jackpot 6000", provider: "NetEnt", img: "jp6000.jpeg", rtp: "98.8%", vol: "High" },
+        { name: "Route 777", provider: "ELK", img: "route777.jpeg", rtp: "96.3%", vol: "High" }
     ]
 };
 
@@ -68,7 +83,7 @@ const PAYMENTS_DB = [
     { name: "Apple Pay", type: "Mobile", time: "Instant" }
 ];
 
-// --- 3. GENERAL SKILL ARTICLES (Restored to Grid Format) ---
+// --- 3. SKILL ARTICLES (8 Articles) ---
 const SKILL_ARTICLES = [
     {
         title: "The Law of Large Numbers",
@@ -89,10 +104,30 @@ const SKILL_ARTICLES = [
         title: "Bankroll Management",
         icon: "🛡️",
         content: "Never bet more than 1% of your bankroll on a single spin. If you have $100, spin at $1. This gives you statistical runway to survive variance."
+    },
+    {
+        title: "RTP vs. Hit Frequency",
+        icon: "🎯",
+        content: "RTP is how much is paid back over time (e.g., 96%). Hit Frequency is how often you win (e.g., 20%). A high RTP slot can still have a low Hit Frequency, meaning long losing streaks are possible."
+    },
+    {
+        title: "Bonus EV (Expected Value)",
+        icon: "🧮",
+        content: "Don't look at the bonus size; look at the math. A $100 bonus with 50x wagering is often worse than a $20 bonus with 1x wagering. Always calculate the cost to clear."
+    },
+    {
+        title: "The RNG Reality",
+        icon: "⚙️",
+        content: "The Random Number Generator never stops. It cycles millions of times per second. The millisecond you click 'Spin' determines the result. There are no 'hot' or 'cold' cycles, only random clusters."
+    },
+    {
+        title: "Responsible Exits",
+        icon: "🛑",
+        content: "Set a 'Stop Loss' and a 'Win Limit' before you open the app. If you double your money, withdraw. If you lose your budget, quit. Discipline is the only way to protect your bankroll."
     }
 ];
 
-// --- 4. NEW: MATH & PROBABILITY SLIDES (For the new slider section) ---
+// --- 4. MATH SLIDES ---
 const MATH_SLIDES = [
     {
         title: "Win Distribution: The Log-Normal Curve",

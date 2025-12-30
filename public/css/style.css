@@ -24,3 +24,21 @@ body {
     transform: translateY(4px); 
     box-shadow: none; 
 }
+
+/* --- STICKY TABLE COLUMNS --- */
+/* This makes the first column (Casino Name) stay visible while scrolling horizontally */
+.sticky-col {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    left: 0;
+    background: #11051F; /* Must match bg to cover text behind it */
+    z-index: 10;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Ensure the header cell is also sticky */
+th.sticky-col {
+    background: #1a0b2e;
+    z-index: 20; /* Higher than body cells */
+}
+
