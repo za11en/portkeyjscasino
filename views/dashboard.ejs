@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portkey | Ontario iGaming Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        electric: '#6C5CE7',
+                        mint: '#00B894',
+                        coral: '#FF7675',
+                        navy: '#2D3436',
+                        darkbg: '#1e2021'
+                    },
+                    fontFamily: {
+                        sans: ['Fredoka', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [v-cloak] { display: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-darkbg text-white font-sans antialiased pb-24">
+
+    <div id="app" v-cloak>
+
+        <div v-if="!ageVerified" class="fixed inset-0 z-50 bg-navy/95 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-navy border-2 border-electric rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-electric/20">
+                <h1 class="text-3xl font-bold text-white mb-4">19+ Only</h1>
+                <p class="text-gray-400 mb-8">This website contains data regarding regulated iGaming in Ontario. You must be 19 years of age or older to enter.</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button @click="denyAge" class="py-3 rounded-xl border border-coral text-coral hover:bg-coral/10 font-bold transition">Exit</button>
+                    <button @click="confirmAge" class="py-3 rounded-xl bg-electric text-white hover:bg-electric/80 font-bold shadow-lg transition">I am 19+</button>
+                </div>
+                <div class="mt-6 flex justify-center opacity-50">
+                    <span class="text-xs uppercase tracking-widest">Authorized Ontario Data</span>
+                </div>
+            </div>
+        </div>
+
+        <header class="p-4 flex justify-between items-center bg-navy border-b border-white/5 sticky top-0 z-40">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-electric to-mint flex items-center justify-center font-bold text-navy">P</div>
+                <span class="text-xl font-bold tracking-tight">Portkey</span>
+            </div>
+            <div class="text-xs font-mono text-mint bg-mint/10 px-2 py-1 rounded">ON-REGULATED</div>
+        </header>
+
+        <div class="p-4 overflow-x-auto no-scrollbar flex gap-3">
+            <button @click="sortBy = 'rating'" :class="sortBy === 'rating' ? 'bg-white text-navy' : 'bg-navy text-gray-400'" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition">Top Rated</button>
+            <button @click="sortBy = 'speed'" :class="sortBy === 'speed' ? 'bg-mint text-navy' : 'bg-navy text-gray-400'" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition">Fastest Payouts</button>
+            <button @click="sortBy = 'games'" :class="sortBy === 'games' ? 'bg-electric text-white' : 'bg-navy text-gray-400'" class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition">Most Games</button>
+        </div>
+
+        <main class="p-4 space-y-4">
+            <div v-for="casino in sortedCasinos" :key="casino.id" class="bg-navy rounded-2xl p-5 border border-white/5 shadow-xl relative overflow-hidden group">
+                
+                <div v-if="casino.hero_badge" class="absolute top-0 right-0 bg-coral text-navy text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                    {{ casino.hero_badge }}
+                </div>
+
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-xl bg-gray-700 flex items-center justify-center text-2xl font-bold text-gray-500">
+                            {{ casino.logo_initials }}
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold leading-tight">{{ casino.name }}</h2>
+                            <p class="text-xs text-gray-500 font-mono mt-1">Lic: {{ casino.legal_license }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <div class="bg-darkbg/50 p-3 rounded-xl border border-white/5">
+                        <p class="text-xs text-gray-400 mb-1">Payout Speed</p>
+                        <p class="text-xl font-mono font-bold text-mint">{{ casino.metrics.payout_speed_hours }}h</p>
+                    </div>
+                    <div class="bg-darkbg/50 p-3 rounded-xl border border-white/5">
+                        <p class="text-xs text-gray-400 mb-1">RTP (Avg)</p>
+                        <p class="text-xl font-mono font-bold text-electric">{{ casino.metrics.rtp_avg }}%</p>
+                    </div>
+                </div>
+
+                <a :href="'/go/' + casino.id" target="_blank" class="block w-full text-center py-3 bg-white text-navy font-bold rounded-xl hover:bg-gray-200 transition">
+                    View Data & Site
+                </a>
+            </div>
+        </main>
+
+        <footer class="fixed bottom-0 w-full bg-navy/95 backdrop-blur border-t border-white/10 p-3 z-50">
+            <div class="flex justify-between items-center max-w-2xl mx-auto">
+                <div class="text-[10px] text-gray-500 leading-tight max-w-[60%]">
+                    Must be 19+. ConnexOntario: 1-866-531-2600. Please Play Responsibly.
+                </div>
+                <div class="flex gap-2">
+                    <div class="h-6 w-12 bg-gray-600 rounded opacity-50"></div> 
+                    <div class="h-6 w-6 bg-gray-600 rounded opacity-50"></div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        // Inject server-side data
+        const initialData = <%- casinos %>;
+
+        createApp({
+            data() {
+                return {
+                    casinos: initialData,
+                    sortBy: 'rating',
+                    ageVerified: false
+                }
+            },
+            mounted() {
+                // Check local storage for Age Gate
+                if(localStorage.getItem('portkey_age_verified') === 'true') {
+                    this.ageVerified = true;
+                }
+            },
+            computed: {
+                sortedCasinos() {
+                    return [...this.casinos].sort((a, b) => {
+                        if (this.sortBy === 'speed') return a.metrics.payout_speed_hours - b.metrics.payout_speed_hours;
+                        if (this.sortBy === 'games') return b.metrics.game_count - a.metrics.game_count;
+                        return 0; // Default order (Rating)
+                    });
+                }
+            },
+            methods: {
+                confirmAge() {
+                    this.ageVerified = true;
+                    localStorage.setItem('portkey_age_verified', 'true');
+                },
+                denyAge() {
+                    window.location.href = "https://www.google.com";
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

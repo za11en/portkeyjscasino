@@ -1,0 +1,47 @@
+[
+  {
+    "id": "betmgm-on",
+    "name": "BetMGM Ontario",
+    "affiliate_link": "https://www.betmgm.com",
+    "logo_initials": "BM",
+    "legal_license": "OPIG1234567",
+    "metrics": {
+      "payout_speed_hours": 24,
+      "rtp_avg": 96.5,
+      "game_count": 850,
+      "live_dealer_tables": 45
+    },
+    "tags": ["Fast Payout", "High Roller"],
+    "hero_badge": "Best for Poker"
+  },
+  {
+    "id": "thescore-bet",
+    "name": "theScore Bet",
+    "affiliate_link": "https://thescore.bet",
+    "logo_initials": "SB",
+    "legal_license": "OPIG9876543",
+    "metrics": {
+      "payout_speed_hours": 12,
+      "rtp_avg": 95.8,
+      "game_count": 400,
+      "live_dealer_tables": 10
+    },
+    "tags": ["Mobile First", "Sports"],
+    "hero_badge": "Top App UI"
+  },
+  {
+    "id": "northstar-bets",
+    "name": "NorthStar Bets",
+    "affiliate_link": "https://northstarbets.ca",
+    "logo_initials": "NS",
+    "legal_license": "OPIG5551212",
+    "metrics": {
+      "payout_speed_hours": 48,
+      "rtp_avg": 97.1,
+      "game_count": 1200,
+      "live_dealer_tables": 60
+    },
+    "tags": ["Huge Library", "Ontario Native"],
+    "hero_badge": "Most Games"
+  }
+]
