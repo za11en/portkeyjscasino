@@ -11,7 +11,7 @@ module.exports = [
     metrics: { speed: "24h", rtp: "96.1%" }, hero_badge: "Vegas King", daily_reward: "Lion's Share", referral_bonus: "$100 Refer-a-Friend", loyalty_tier: "MGM Rewards"
   },
   { 
-    id: "caesars", name: "Caesars Palace", logo_file: "caesar.svg", affiliate_link: "https://www.caesarspalaceonline.com", 
+    id: "caesars", name: "Caesars Palace", logo_file: "caesar.png", affiliate_link: "https://www.caesarspalaceonline.com", 
     sign_up_bonus: "$1,250 MATCH", bonus_detail: "+ 2500 Reward Creds", bonus_type: "match", wagering_req: "15x", min_deposit: "$10", 
     metrics: { speed: "24h", rtp: "95.8%" }, hero_badge: "Emperor", daily_reward: "Mystery Bonus", referral_bonus: "5000 Credits", loyalty_tier: "Caesars Rewards"
   },
