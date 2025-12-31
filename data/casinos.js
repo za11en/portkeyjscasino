@@ -59,7 +59,7 @@ module.exports = [
 
   { id: "pokerstars", name: "PokerStars Casino", logo_file: "pokerstars.png", affiliate_link: "https://www.pokerstars.ca", sign_up_bonus: "$100 INSTANT", bonus_detail: "Bet $1 Get $100", bonus_type: "no_wager", wagering_req: "1x", min_deposit: "$10", metrics: { speed: "Instant", rtp: "96.8%" }, daily_reward: "Chest Drops" },
 
-  { id: "betway", name: "Betway", logo_file: "betway.png", affiliate_link: "https://betway.ca", sign_up_bonus: "$200 MATCH", bonus_detail: "Flexi Bonus", bonus_type: "match", wagering_req: "50x", min_deposit: "$10", metrics: { speed: "48h", rtp: "95.8%" } }
+  { id: "betway", name: "Betway", logo_file: "betway.png", affiliate_link: "https://betway.ca", sign_up_bonus: "$200 MATCH", bonus_detail: "Flexi Bonus", bonus_type: "match", wagering_req: "50x", min_deposit: "$10", metrics: { speed: "48h", rtp: "95.8%" } },
 
   { id: "comeon", name: "ComeOn!", logo_file: "comeon.png", affiliate_link: "https://www.comeon.com", sign_up_bonus: "150% MATCH", bonus_detail: "Up to $1500", bonus_type: "match", wagering_req: "40x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.0%" } },
   { id: "pointsbet", name: "PointsBet", logo_file: "pointsbet.png", affiliate_link: "https://on.pointsbet.ca", sign_up_bonus: "50 FREE SPINS", bonus_detail: "No Wagering", bonus_type: "spins", wagering_req: "0x", min_deposit: "$10", metrics: { speed: "12h", rtp: "95.0%" }, daily_reward: "Power Hour" },
