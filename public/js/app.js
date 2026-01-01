@@ -8,8 +8,8 @@ createApp({
             payments: [], 
             weeklySchedule: [], 
             skillArticles: [],
-            mathSlides: [], // <--- New Data
-            activeMathSlide: 0, // <--- New State
+            mathSlides: [],
+            activeMathSlide: 0, //
             currentDayIndex: 0, 
             filter: 'all', 
             loading: true, 
