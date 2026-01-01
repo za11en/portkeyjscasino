@@ -82,7 +82,7 @@
                             <div class="h-16 mb-4 flex items-center justify-center">
                                 <img :src="`/${casino.logo_file}`" @error="handleImageError" class="h-full max-w-[80%] object-contain filter drop-shadow-lg">
                             </div>
-                            <div class="mb-5"><p class="text-2xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p><p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p></div>
+                            <div class="mb-5"><p class="text-xl font-display font-black text-white leading-none mb-1">{{ casino.sign_up_bonus }}</p><p class="text-xs font-bold text-neon-yellow uppercase tracking-wide">{{ casino.bonus_detail }}</p></div>
                             <div class="flex justify-center gap-2 mb-5">
                                 <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">Wager: <span class="text-white">{{ casino.wagering_req || '-' }}</span></div>
                                 <div class="bg-white/5 border border-white/10 px-2 py-1 rounded text-[9px] font-bold text-gray-300 uppercase">Min: <span class="text-white">{{ casino.min_deposit || '-' }}</span></div>
