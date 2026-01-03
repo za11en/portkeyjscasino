@@ -1,5 +1,5 @@
 module.exports = [
-  { id: "888", name: "888 Casino", logo_file: "888.svg", affiliate_link: "https://www.888casino.ca", 
+  { id: "888", name: "888 Casino", logo_file: "888casino.png", affiliate_link: "https://www.888casino.ca", 
     sign_up_bonus: "88 FREE SPINS", bonus_detail: "No Deposit Needed", bonus_type: "spins", wagering_req: "1x", min_deposit: "$20", 
     metrics: { speed: "48h", rtp: "96.6%" }, hero_badge: "Exclusive", loyalty_tier: "VIP Club"},
   
@@ -25,15 +25,15 @@ module.exports = [
     sign_up_bonus: "$3,000 MATCH", bonus_detail: "+ $100 On House", bonus_type: "match", wagering_req: "15x", min_deposit: "$10", 
     metrics: { speed: "24h", rtp: "96.1%" }, hero_badge: "Vegas King", daily_reward: "Lion's Share", referral_bonus: "$100 Refer-a-Friend", loyalty_tier: "MGM Rewards"},
 
-  { id: "betmgm-poker", name: "BetMGM Poker", logo_file: null, affiliate_link: "https://poker.on.betmgm.ca", sign_up_bonus: null, metrics: null },
+  { id: "betmgm-poker", name: "BetMGM Poker", logo_file: "betmgm.png" , affiliate_link: "https://poker.on.betmgm.ca", sign_up_bonus: null, metrics: null },
 
-  { id: "betmgm-sport", name: "BetMGM Sportsbook", logo_file: null, affiliate_link: "https://sports.on.betmgm.ca", sign_up_bonus: null, metrics: null },
+  { id: "betmgm-sport", name: "BetMGM Sportsbook", logo_file: "betmgm.png" , affiliate_link: "https://sports.on.betmgm.ca", sign_up_bonus: null, metrics: null },
 
-  { id: "betrivers", name: "BetRivers", logo_file: "betrivers.svg", affiliate_link: "https://on.betrivers.ca", 
+  { id: "betrivers", name: "BetRivers", logo_file: "betrivers.png", affiliate_link: "https://on.betrivers.ca", 
     sign_up_bonus: "$500 LOSSBACK", bonus_detail: "2nd Chance Bet", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", 
     metrics: { speed: "1h", rtp: "95.5%" }, hero_badge: "Low Wager", daily_reward: "Rush Race", referral_bonus: "$50 For You", loyalty_tier: "iRush Rewards"},
 
-  { id: "betsafe", name: "Betsafe", logo_file: null, affiliate_link: "https://betsafe.com/ca", sign_up_bonus: null, metrics: null },
+  { id: "betsafe", name: "Betsafe", logo_file: "betsafe.png", affiliate_link: "https://betsafe.com/ca", sign_up_bonus: null, metrics: null },
 
   { id: "betty", name: "Betty", logo_file: "betty.png" , affiliate_link: "https://betty.ca", sign_up_bonus: null, metrics: null },
 
@@ -43,13 +43,13 @@ module.exports = [
   { id: "betway", name: "Betway", logo_file: "betway.png", affiliate_link: "https://betway.ca", 
     sign_up_bonus: "$200 MATCH", bonus_detail: "Flexi Bonus", bonus_type: "match", wagering_req: "50x", min_deposit: "$10", metrics: { speed: "48h", rtp: "95.8%" } },
 
-  { id: "bwin", name: "Bwin", logo_file: null, affiliate_link: "https://sports.bwin.com/en-ca", sign_up_bonus: null, metrics: null },
+  { id: "bwin", name: "Bwin", logo_file: "betwin.png" , affiliate_link: "https://sports.bwin.com/en-ca", sign_up_bonus: null, metrics: null },
 
-  { id: "caesars", name: "Caesars Palace", logo_file: "caesar.png", affiliate_link: "https://www.caesarspalaceonline.com", 
+  { id: "caesars", name: "Caesars Palace", logo_file: "caesars.png", affiliate_link: "https://www.caesarspalaceonline.com", 
     sign_up_bonus: "$1,250 MATCH", bonus_detail: "+ 2500 Reward Creds", bonus_type: "match", wagering_req: "15x", min_deposit: "$10", 
     metrics: { speed: "24h", rtp: "95.8%" }, hero_badge: "Emperor", daily_reward: "Mystery Bonus", referral_bonus: "5000 Credits", loyalty_tier: "Caesars Rewards"},
 
-  { id: "captain", name: "Captain Cooks Casino", logo_file: "captain.png", affiliate_link: "https://captaincooks.casino", 
+  { id: "captain", name: "Captain Cooks Casino", logo_file: "captaincooks.png", affiliate_link: "https://captaincooks.casino", 
     sign_up_bonus: "100 CHANCES", bonus_detail: "For $5 Deposit", bonus_type: "spins", wagering_req: "200x", min_deposit: "$5", metrics: { speed: "48h", rtp: "96.0%" } },
 
   { id: "classic", name: "Casino Classic", logo_file: "classic.png", affiliate_link: "https://casinoclassic.casino", 
@@ -62,7 +62,7 @@ module.exports = [
     sign_up_bonus: "150 CHANCES", bonus_detail: "Progressive", bonus_type: "spins", wagering_req: "200x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" } },
 
   { id: "luxury", name: "Luxury Casino", logo_file: "luxury.png", affiliate_link: "https://ontario.luxury.casino", 
-    sign_up_bonus: "$1,000 MATCH", bonus_detail: "High Limits", bonus_type: "match", wagering_req: "200x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" } },
+    sign_up_bonus: "100% Match", bonus_detail: "Up to $150", bonus_type: "match", wagering_req: "30x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" } },
 
   { id: "yukon", name: "Yukon Gold Casino", logo_file: "yukongold.png", affiliate_link: "https://ontario.yukongold.casino/", 
     sign_up_bonus: "125 CHANCES", bonus_detail: "For $10 Deposit", bonus_type: "spins", wagering_req: "200x", min_deposit: "$10", metrics: { speed: "48h", rtp: "96.0%" } },
@@ -82,7 +82,7 @@ module.exports = [
   { id: "comeon", name: "ComeOn!", logo_file: "comeon.png", affiliate_link: "https://comeon.com/ca", 
     sign_up_bonus: "150% MATCH", bonus_detail: "Up to $1500", bonus_type: "match", wagering_req: "40x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.0%" } },
 
-  { id: "conquestador", name: "Conquestador", logo_file: null, affiliate_link: "https://conquestador.com", sign_up_bonus: null, metrics: null },
+  { id: "conquestador", name: "Conquestador", logo_file: "conquestador.png" , affiliate_link: "https://conquestador.com", sign_up_bonus: null, metrics: null },
 
   { id: "delta", name: "Delta Casino", logo_file: "delta.png" , affiliate_link: "https://deltabingo.com", sign_up_bonus: null, metrics: null },
 
@@ -92,25 +92,25 @@ module.exports = [
 
   { id: "draftkings-sport", name: "DraftKings Sportsbook", logo_file: null, affiliate_link: "https://sportsbook.draftkings.com", sign_up_bonus: null, metrics: null },
 
-  { id: "fanduel", name: "FanDuel Casino", logo_file: "fan.png", affiliate_link: "https://casino.fanduel.ca", 
+  { id: "fanduel", name: "FanDuel Casino", logo_file: "fanduel.png", affiliate_link: "https://casino.fanduel.ca", 
     sign_up_bonus: "$2,000 LOSSBACK", bonus_detail: "Play It Again", bonus_type: "lossback", wagering_req: "1x", min_deposit: "$10", 
     metrics: { speed: "12h", rtp: "96.2%" }, hero_badge: "No Sweat", daily_reward: "Reward Machine", referral_bonus: "$100 Bonus", loyalty_tier: "Players Club"},
 
-  { id: "fanduel-sport", name: "FanDuel Sportsbook", logo_file: null, affiliate_link: "https://sportsbook.fanduel.ca", sign_up_bonus: null, metrics: null },
+  { id: "fanduel-sport", name: "FanDuel Sportsbook", logo_file: "fanduel.png", affiliate_link: "https://sportsbook.fanduel.ca", sign_up_bonus: null, metrics: null },
 
   { id: "feverslots", name: "Fever Slots", logo_file: "feverslots.png", affiliate_link: "https://feverslots.ca", sign_up_bonus: null, metrics: null },
 
   { id: "firevegas", name: "FireVegas", logo_file: "firevegas.png", affiliate_link: "https://firevegas.com", 
     sign_up_bonus: "FIRE TOURNAMENTS", bonus_detail: "No Bonus - Cashback", bonus_type: "lossback", wagering_req: "0x", min_deposit: "$20", metrics: { speed: "Instant", rtp: "97.0%" } },
 
-  { id: "ggpoker", name: "GGPoker", logo_file: null, affiliate_link: "https://ggpoker.ca", sign_up_bonus: null, metrics: null },
+  { id: "ggpoker", name: "GGPoker", logo_file: "gg.png", affiliate_link: "https://ggpoker.ca", sign_up_bonus: null, metrics: null },
 
   { id: "goldennugget", name: "Golden Nugget Casino", logo_file: "nugget.png", affiliate_link: null, sign_up_bonus: null, metrics: null },
 
-  { id: "highfly", name: "High Flyer Casino", logo_file: "highfly.png", affiliate_link: "https://highflyercasino.com", 
+  { id: "highfly", name: "High Flyer Casino", logo_file: "high.png", affiliate_link: "https://highflyercasino.com", 
     sign_up_bonus: "$500 MATCH", bonus_detail: "Fly High", bonus_type: "match", wagering_req: "30x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.0%" } },
 
-  { id: "horseshoe", name: "Horseshoe Online Casino", logo_file: null, affiliate_link: null, sign_up_bonus: null, metrics: null },
+  { id: "horseshoe", name: "Horseshoe Online Casino", logo_file: "horse.png", affiliate_link: null, sign_up_bonus: null, metrics: null },
 
   { id: "jackpotcity", name: "Jackpot City", logo_file: "jackpotcity.png", affiliate_link: "https://jackpotcity.ca", 
     sign_up_bonus: "$1,600 PACK", bonus_detail: "Daily Wheel", bonus_type: "match", wagering_req: "70x", min_deposit: "$10", metrics: { speed: "24h", rtp: "97.8%" }, hero_badge: "High Roller" },
@@ -126,9 +126,9 @@ module.exports = [
   { id: "luckydays", name: "Lucky Days", logo_file: "luckydays.png", affiliate_link: "https://luckydays.ca", 
     sign_up_bonus: "$1,500 PACK", bonus_detail: "3 Deposit Bonuses", bonus_type: "match", wagering_req: "30x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.5%" } },
 
-  { id: "maverick", name: "Maverick Games", logo_file: null, affiliate_link: "https://maverickgames.com", sign_up_bonus: null, metrics: null },
+  { id: "maverick", name: "Maverick Games", logo_file: "maverick.png" , affiliate_link: "https://maverickgames.com", sign_up_bonus: null, metrics: null },
 
-  { id: "monopoly", name: "Monopoly", logo_file: null, affiliate_link: "https://monopolycasino.ca", sign_up_bonus: null, metrics: null },
+  { id: "monopoly", name: "Monopoly", logo_file: "monopoly.jpg", affiliate_link: "https://monopolycasino.ca", sign_up_bonus: null, metrics: null },
 
   { id: "mrvegas", name: "Mr.Vegas", logo_file: "mrvegas.png", affiliate_link: "https://mrvegas.com", 
     sign_up_bonus: "100% MATCH", bonus_detail: "Rainbow Fridays", bonus_type: "match", wagering_req: "35x", min_deposit: "$10", metrics: { speed: "24h", rtp: "96.0%" } },
@@ -192,7 +192,7 @@ module.exports = [
 
   { id: "spingenie", name: "SpinGenie", logo_file: "spingenie.png" , affiliate_link: "https://spingenie.ca", sign_up_bonus: null, metrics: null },
 
-  { id: "sports-int", name: "Sports Interaction", logo_file: "sia.png", affiliate_link: "https://on.sportsinteraction.com/en-ca/sports", 
+  { id: "sports-int", name: "Sports Interaction", logo_file: "sports.png", affiliate_link: "https://on.sportsinteraction.com/en-ca/sports", 
     sign_up_bonus: "$3,000 MATCH", bonus_detail: "Canadian Org", bonus_type: "match", wagering_req: "30x", min_deposit: "$20", metrics: { speed: "24h", rtp: "96.0%" } },
 
   { id: "stardust", name: "Stardust Casino", logo_file: "stardust.png", affiliate_link: "https://stardustcasino.ca", sign_up_bonus: null, metrics: null },
