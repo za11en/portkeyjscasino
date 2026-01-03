@@ -144,12 +144,12 @@
                 <div v-for="(list, category) in slotsData" :key="category">
                     <h3 class="text-xl font-display font-black mb-4 uppercase text-neon-cyan">{{ category.replace('_', ' ') }}</h3>
                     <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x">
-                        <div v-for="slot in list" :key="slot.name" class="snap-center flex-shrink-0 w-[140px] glass-panel p-2 rounded-xl border border-white/5 hover:border-neon-cyan/50 transition">
+                        <div v-for="slot in list" :key="slot.name" class="snap-center flex-shrink-0 w-[180px] glass-panel p-2 rounded-xl border border-white/5 hover:border-neon-cyan/50 transition">
                             <div class="relative aspect-video rounded-lg overflow-hidden bg-black/50 mb-2">
                                 <img :src="`/${slot.img}`" @error="handleImageError" class="w-full h-full object-cover">
                                 <span class="absolute top-1 right-1 bg-black/80 text-neon-cyan text-[8px] font-bold px-1.5 rounded">{{ slot.rtp }}</span>
                             </div>
-                            <h4 class="font-bold text-[10px] truncate">{{ slot.name }}</h4>
+                            <h4 class="font-bold text-[12px] truncate">{{ slot.name }}</h4>
                         </div>
                     </div>
                 </div>
