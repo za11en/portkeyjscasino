@@ -216,7 +216,7 @@ module.exports = [
 
   { 
     id: "ggpoker", name: "GGPoker", logo_file: "gg.png", affiliate_link: "https://ggpoker.ca", sign_up_bonus: null, metrics: null,
-    poker: true, sports: false, casino: false
+    poker: true, sports: false, casino: true
   },
 
   { 
